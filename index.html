@@ -1,143 +1,101 @@
+
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cold Development</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-</head>
-<body>
-    <div class="custom-cursor"></div>
-    
-    <!-- Background animation -->
-    <div class="background">
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-     </div>
+    <head>
+        <title>colddev</title>
+        <link
+            rel="icon"
+            href="./assets/snowflake.svg"
+        />
+        <meta property="description" content="eternally confused" />
+        <meta name="theme-color" content="#635aa7" />
 
-    <header>
-        <div class="nav">
-            <a href="https://discord.com/invite/kMgYfTZCGB" class="Btn discord-btn" target="_blank">
-                <span class="svgContainer">
-                    <i class="fab fa-discord"></i>
-                </span>
-                <span>DISCORD</span>
-            </a>
-            <a href="https://github.com/padrewin" class="Btn github-btn" target="_blank">
-                <span class="svgContainer">
-                    <i class="fab fa-github"></i>
-                </span>
-                <span>GITHUB</span>
-            </a>
-            <a href="https://www.spigotmc.org/members/padrewin.2013368/" class="Btn spigotmc-btn" target="_blank">
-                <span class="svgContainer">
-                    <i class="fas fa-cube"></i>
-                </span>
-                <span>SPIGOTMC</span>
-            </a>
-            
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link rel="preconnect" href="https://unpkg.com" />
+
+        <link
+            rel="stylesheet"
+            href="https://fonts.googleapis.com/css2?family=M+PLUS+1+Code:wght@100..700&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap"
+        />
+        <link
+            rel="stylesheet"
+            href="./assets/normalize.css"
+        />
+        <link
+            rel="stylesheet"
+            href="./assets/sakura-vader.css"
+        />
+
+        <link rel="stylesheet" href="./assets/custom.css" />
+
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    </head>
+
+    <body>
+        <section id="header">
+            <h1>Cold Development</h1>
+            <blockquote>it's free💤ing cold.. ❄️</blockquote>
+        </section>
+
+        <section id="about">
+            <h4>about</h4>
+            <div>
+                — projects @
+                <a href="https://github.com/Cold-Development">github</a>,
+                <a href="https://hub.colddev.dev">maven repo</a>,
+                <a href="https://jenkins.colddev.dev">jenkins</a>
+            </div>
+            <div>
+                — music @
+                <a href="https://open.spotify.com/user/31pzppfcfk7blezxdpovdmdrh6ta?si=bc4c2c209fd44706" alt="spotify" title="don't stalk me bro">spotify</a>
+            </div>
+        </section>
+
+        <br />
+        <hr />
+
+        <section id="contact">
+            <h4>contact</h4>
+            <ul>
+                <li>
+                    <a href="https://github.com/padrewin" alt="github" title="you can DM me ofc">padrewin
+                    </a>
+                </li>
+                <li>discord — @padrewin</li>
+            </ul>
+        </section>
+
+        <hr />
+        <br />
+
+        <div>
+            <span>
+                <a href="https://padrewin.github.io" class="banner"
+                    ><img src="./assets/padrewin.png" alt="padrewin" title="padrewin"
+                /></a>
+                <a href="https://github.com/Cold-Development" class="banner"
+                    ><img src="./assets/cold-development.png" alt="colddev" title="colddev"
+                /></a>
+            </span>
         </div>
-    </header>
 
-    <main>
-        <h1 class="title">Cold Development</h1>
-        <div class="card-container">
-            <div class="card">
-                <img src="https://www.spigotmc.org/data/resource_icons/118/118275.jpg" alt="EnderScythe">
-                <h2>EnderScythe</h2>
-                <p>EnderScythe is a Minecraft plugin that allows you to wield an ender scythe and harness the power of the end.</p>
-                <div class="buttons">
-                    <a href="https://github.com/Cold-Development/EnderScythe" class="github-link">GitHub</a>
-                    <a href="https://www.spigotmc.org/resources/enderscythe.118275/" class="spigotmc-link">SpigotMC</a>
-                </div>
-            </div>
-            
-            <div class="card">
-                <img src="https://www.spigotmc.org/data/resource_icons/116/116984.jpg" alt="GiveAll">
-                <h2>GiveAll</h2>
-                <p>GiveAll is a Minecraft plugin that allows you to give all online players an item you're holding in your main hand.</p>
-                <div class="buttons">
-                    <a href="https://github.com/Cold-Development/GiveAll" class="github-link">GitHub</a>
-                    <a href="https://www.spigotmc.org/resources/giveall.116984/" class="spigotmc-link">SpigotMC</a>
-                </div>
-            </div>
-            <div class="card">
-                <img src="https://www.spigotmc.org/data/resource_icons/118/118054.jpg" alt="WelcomeHead">
-                <h2>WelcomeHead</h2>
-                <p>WelcomeHead is a Minecraft plugin that shows a player's head with a welcome message on server join.</p>
-                <div class="buttons">
-                    <a href="https://github.com/Cold-Development/WelcomeHead" class="github-link">GitHub</a>
-                    <a href="https://www.spigotmc.org/resources/welcomehead.118054/" class="spigotmc-link">SpigotMC</a>
-                </div>
-            </div>
-            <div class="card">
-                <img src="https://www.spigotmc.org/data/resource_icons/117/117688.jpg" alt="HudActionBar">
-                <h2>HudActionBar</h2>
-                <p>HudActionBar is a Minecraft plugin that allows you to broadcast a custom message right above the player's hotbar.</p>
-                <div class="buttons">
-                    <a href="https://github.com/Cold-Development/ColdBroadcast" class="github-link">GitHub</a>
-                    <a href="https://www.spigotmc.org/resources/coldhudbar.117688/" class="spigotmc-link">SpigotMC</a>
-                </div>
-            </div>
-        </div>
-    </main>
 
-    <footer>
-        <p class="footer-text">
-            <i class="fa-solid fa-code"></i> with <i class="fa-regular fa-heart"></i> by padrewin
-        </p>
-    </footer>
 
-    <script src="script.js"></script>
-</body>
+        <script>
+            console.log(
+                "%c ❄ %c it's free💤ing cold..",
+                "background-color: #635aa7; color: white; border-radius: 8px;",
+                "font-style: italic; color: white"
+            );
+        </script>
+
+<footer>
+    <p class="footer-text"> <i class="fa-solid fa-code"></i> with <i class="fa-regular fa-heart"></i> by Cold Development</p>
+</footer>
+    </body>
 </html>
