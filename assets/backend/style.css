@@ -1,4 +1,4 @@
-/* Definirea fontului personalizat */
+/* Custom font definition */
 @font-face {
     font-family: 'CustomFont';
     src: url('/assets/font/coldfont.woff2') format('woff2');
@@ -6,9 +6,9 @@
     font-style: normal;
 }
 
-/* Setările generale pentru corpul paginii */
+/* Website background settings */
 body {
-    font-family: 'CustomFont', Arial, sans-serif; /* Aplicarea fontului personalizat */
+    font-family: 'CustomFont', Arial, sans-serif; /* Custom font apply */
     background-color: #15101d;
     color: #f5f5f5;
     margin: 0;
@@ -18,13 +18,13 @@ body {
     height: 100vh;
     padding: 1em;
     box-sizing: border-box;
-    overflow: hidden; /* Ascunde scroll-ul */
+    overflow: hidden; /* Hide scroll */
 }
 
-/* Stilurile pentru elementul <pre> */
+/* Settings for <pre> element */
 pre {
     font-family: 'CustomFont', Arial, sans-serif;
-    font-size: 14px; /* Dimensiune font ajustată */
+    font-size: 14px; /* Font size adjustment */
     word-wrap: break-word;
     white-space: pre-wrap;
     background-color: #391d5e83;
@@ -39,7 +39,7 @@ pre {
     padding-top: 2em;
 }
 
-/* Stilurile pentru link-uri */
+/* Settings for link styles */
 a {
     color: #9172ff;
     text-decoration: none;
@@ -48,21 +48,21 @@ a:hover {
     text-decoration: underline;
 }
 
-/* Stilurile pentru footer */
+/* Settings for footer style */
 footer {
-    position: fixed; /* Fixat la baza paginii */
-    bottom: 0; /* Aliniat jos */
+    position: fixed; /* Fixed at the bottom of the page */
+    bottom: 0; /* Bottom paragraph */
     left: 0;
-    width: 100%; /* Lățime completă */
-    background-color: #15101d; /* Culoare de fundal */
-    padding: 10px 0; /* Spațiu între text și margini */
-    text-align: center; /* Centrat textul */
+    width: 100%; /* Complete width */
+    background-color: #15101d; /* Background color */
+    padding: 10px 0; /* Space between text and border */
+    text-align: center; /* Center text */
     z-index: 10;
 }
 
-/* Stiluri pentru textul din footer */
+/* Settings for text style from footer */
 .footer-text {
-    font-size: 25px; /* Dimensiune font ajustată */
+    font-size: 25px; /* Font size adjustment */
     background: linear-gradient(270deg, #522258, #8C3061, #C63C51, #D95F59);
     background-size: 400% 400%;
     color: transparent;
@@ -73,12 +73,12 @@ footer {
     font-family: 'CustomFont', Arial, sans-serif;
 }
 
-/* Iconițele din footer */
+/* Footer icons */
 footer i {
-    margin: 0 5px; /* Spațiere între iconițe */
+    margin: 0 5px; /* Spaces between icons */
 }
 
-/* Animația gradientului pentru text */
+/* Gradient animation for text */
 @keyframes gradientAnimation {
     0% {
         background-position: 0% 50%;
@@ -91,7 +91,7 @@ footer i {
     }
 }
 
-/* Bara de fereastră de deasupra elementului <pre> */
+/* Window bar before <pre> element */
 .window-bar {
     display: flex;
     gap: 5px;
@@ -101,7 +101,7 @@ footer i {
     left: 10px;
 }
 
-/* Stiluri pentru butoanele ferestrei */
+/* Settings for window buttons */
 .window-button {
     width: 14px;
     height: 14px;
