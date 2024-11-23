@@ -8,7 +8,7 @@
 
 /* Website background settings */
 body {
-    font-family: 'CustomFont', Arial, sans-serif; /* Custom font apply */
+    font-family: 'CustomFont', Arial, sans-serif;
     background-color: #15101d;
     color: #f5f5f5;
     margin: 0;
@@ -18,12 +18,13 @@ body {
     height: 100vh;
     padding: 1em;
     box-sizing: border-box;
+    overflow: hidden; /* Elimină scrolling-ul */
 }
 
 /* Settings for <pre> element */
 pre {
     font-family: 'CustomFont', Arial, sans-serif;
-    font-size: 14px; /* Font size adjustment */
+    font-size: 14px;
     word-wrap: break-word;
     white-space: pre-wrap;
     background-color: #391d5e83;
@@ -31,17 +32,11 @@ pre {
     padding: 1em;
     border-radius: 8px;
     max-width: 100%;
-    max-height: 100%;
+    max-height: calc(100vh - 60px); /* Asigură încadratea */
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     position: relative;
     padding-top: 2em;
-}
-
-/* General settings for html and body */
-html, body {
-    overflow-y: auto; /* Activează overscroll pentru pull-to-refresh */
-    overscroll-behavior: auto; /* Permite pull-to-refresh */
-    -webkit-overflow-scrolling: touch; /* Scrolling fluid pe mobil */
+    overflow: auto; /* Pentru a preveni depășirile */
 }
 
 /* Settings for link styles */
@@ -55,19 +50,19 @@ a:hover {
 
 /* Settings for footer style */
 footer {
-    position: fixed; /* Fixed at the bottom of the page */
-    bottom: 0; /* Bottom paragraph */
+    position: fixed;
+    bottom: 0;
     left: 0;
-    width: 100%; /* Complete width */
-    background-color: #15101d; /* Background color */
-    padding: 10px 0; /* Space between text and border */
-    text-align: center; /* Center text */
+    width: 100%;
+    background-color: #15101d;
+    padding: 10px 0;
+    text-align: center;
     z-index: 10;
 }
 
 /* Settings for text style from footer */
 .footer-text {
-    font-size: 25px; /* Font size adjustment */
+    font-size: 20px; /* Ajustare font pentru ecrane mici */
     background: linear-gradient(270deg, #522258, #8C3061, #C63C51, #D95F59);
     background-size: 400% 400%;
     color: transparent;
@@ -80,7 +75,7 @@ footer {
 
 /* Footer icons */
 footer i {
-    margin: 0 5px; /* Spaces between icons */
+    margin: 0 5px;
 }
 
 /* Gradient animation for text */
@@ -108,8 +103,8 @@ footer i {
 
 /* Settings for window buttons */
 .window-button {
-    width: 14px;
-    height: 14px;
+    width: 12px; /* Redus pentru ecrane mici */
+    height: 12px;
     border-radius: 50%;
     display: inline-block;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
@@ -125,4 +120,37 @@ footer i {
 
 .green {
     background-color: #27c93f;
+}
+
+/* Media queries for small screens */
+@media (max-width: 768px) {
+    body {
+        padding: 0.5em;
+        font-size: 12px; /* Micșorează dimensiunea fontului */
+    }
+
+    pre {
+        font-size: 12px;
+        padding: 0.8em;
+        max-height: calc(100vh - 80px);
+    }
+
+    footer {
+        font-size: 14px;
+        padding: 5px 0;
+    }
+
+    .footer-text {
+        font-size: 16px;
+    }
+
+    .window-bar {
+        gap: 3px;
+        top: 3px;
+    }
+
+    .window-button {
+        width: 10px;
+        height: 10px;
+    }
 }
