@@ -1,0 +1,123 @@
+/* Definirea fontului personalizat */
+@font-face {
+    font-family: 'CustomFont';
+    src: url('/assets/font/coldfont.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
+
+/* Setările generale pentru corpul paginii */
+body {
+    font-family: 'CustomFont', Arial, sans-serif; /* Aplicarea fontului personalizat */
+    background-color: #15101d;
+    color: #f5f5f5;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    padding: 1em;
+    box-sizing: border-box;
+    overflow: hidden; /* Ascunde scroll-ul */
+}
+
+/* Stilurile pentru elementul <pre> */
+pre {
+    font-family: 'CustomFont', Arial, sans-serif;
+    font-size: 14px; /* Dimensiune font ajustată */
+    word-wrap: break-word;
+    white-space: pre-wrap;
+    background-color: #391d5e83;
+    color: #f8f8f2;
+    padding: 1em;
+    border-radius: 8px;
+    max-width: 100%;
+    max-height: 100%;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    overflow-y: hidden;
+    position: relative;
+    padding-top: 2em;
+}
+
+/* Stilurile pentru link-uri */
+a {
+    color: #9172ff;
+    text-decoration: none;
+}
+a:hover {
+    text-decoration: underline;
+}
+
+/* Stilurile pentru footer */
+footer {
+    position: fixed; /* Fixat la baza paginii */
+    bottom: 0; /* Aliniat jos */
+    left: 0;
+    width: 100%; /* Lățime completă */
+    background-color: #15101d; /* Culoare de fundal */
+    padding: 10px 0; /* Spațiu între text și margini */
+    text-align: center; /* Centrat textul */
+    z-index: 10;
+}
+
+/* Stiluri pentru textul din footer */
+.footer-text {
+    font-size: 25px; /* Dimensiune font ajustată */
+    background: linear-gradient(270deg, #522258, #8C3061, #C63C51, #D95F59);
+    background-size: 400% 400%;
+    color: transparent;
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: gradientAnimation 1s ease infinite;
+    font-family: 'CustomFont', Arial, sans-serif;
+}
+
+/* Iconițele din footer */
+footer i {
+    margin: 0 5px; /* Spațiere între iconițe */
+}
+
+/* Animația gradientului pentru text */
+@keyframes gradientAnimation {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+/* Bara de fereastră de deasupra elementului <pre> */
+.window-bar {
+    display: flex;
+    gap: 5px;
+    padding: 0.5em 0;
+    position: absolute;
+    top: 5px;
+    left: 10px;
+}
+
+/* Stiluri pentru butoanele ferestrei */
+.window-button {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    display: inline-block;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.red {
+    background-color: #ff5f57;
+}
+
+.yellow {
+    background-color: #ffbd2e;
+}
+
+.green {
+    background-color: #27c93f;
+}
