@@ -21,15 +21,7 @@ body {
 }
 
 html, body {
-    height: 100%;
-    margin: 0;
-    padding: 0;
-    overscroll-behavior: none; /* Evită scroll adițional */
-}
-
-.container {
-    height: 100%;
-    overflow: hidden; /* Ascunde scroll pentru conținut */
+    overscroll-behavior: auto; /* Permite pull-to-refresh */
 }
 
 /* Settings for <pre> element */
