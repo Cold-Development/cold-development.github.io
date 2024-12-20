@@ -1,0 +1,42 @@
+name: Deploy GitHub Pages
+
+on:
+  push:
+    branches:
+      - master
+  schedule:
+    - cron: "0 0 * * *" # Rulează zilnic la ora 00:00 UTC
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Get short commit hash
+      id: get_hash
+      run: echo "COMMIT_HASH=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+
+    - name: Debug Commit Hash
+      run: |
+        echo "Commit Hash: ${{ env.COMMIT_HASH }}"
+
+    - name: Update all HTML pages with commit hash and link
+      env:
+        REPO_URL: https://github.com/Cold-Development/cold-development.github.io
+      run: |
+        for file in *.html; do
+          sed -i "s|@loading...|@<a href='${REPO_URL}/commit/${{ github.sha }}' target='_blank'>${{ env.COMMIT_HASH }}</a>|g" "$file"
+        done
+        cat index.html
+
+    - name: Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.WEBSITE_AUTH }}
+        publish_branch: gh-pages
+        publish_dir: .
+        exclude_assets: .github
+        enable_jekyll: false
