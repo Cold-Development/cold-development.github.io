@@ -4,8 +4,10 @@ on:
   push:
     branches:
       - master
-  schedule:
-    - cron: "0 0 * * *" # Rulează zilnic la ora 00:00 UTC
+  # Lets you redeploy by hand from the Actions tab. There is deliberately no
+  # schedule trigger: GitHub disables scheduled workflows after 60 days
+  # without repo activity, and that switched off the push deploy as well.
+  workflow_dispatch:
 
 jobs:
   build:
@@ -13,27 +15,25 @@ jobs:
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Get short commit hash
-      id: get_hash
       run: echo "COMMIT_HASH=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
 
-    - name: Debug Commit Hash
-      run: |
-        echo "Commit Hash: ${{ env.COMMIT_HASH }}"
-
-    - name: Update all HTML pages with commit hash and link
+    - name: Stamp commit hash and bust asset caches
       env:
         REPO_URL: https://github.com/Cold-Development/cold-development.github.io
       run: |
         for file in *.html; do
-          sed -i "s|@loading...|@<a href='${REPO_URL}/commit/${{ github.sha }}' target='_blank'>${{ env.COMMIT_HASH }}</a>|g" "$file"
+          # Footer commit link
+          sed -i "s|@loading...|@<a href='${REPO_URL}/commit/${{ github.sha }}' target='_blank'>${COMMIT_HASH}</a>|g" "$file"
+          # Every deploy gets fresh CSS/JS URLs, so browsers never keep an old copy
+          sed -i -E "s/\?v=[^\"']*([\"'])/?v=${COMMIT_HASH}\1/g" "$file"
         done
-        cat index.html
+        grep -n "?v=\|commit-hash" *.html
 
     - name: Deploy to GitHub Pages
-      uses: peaceiris/actions-gh-pages@v3
+      uses: peaceiris/actions-gh-pages@v4
       with:
         github_token: ${{ secrets.WEBSITE_AUTH }}
         publish_branch: gh-pages
