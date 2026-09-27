@@ -14,9 +14,11 @@
     font-display: swap;
 }
 
-/* Design tokens: cool slate neutrals, one glacier-blue accent */
+/* Design tokens: cool slate neutrals, one glacier-blue accent.
+   color-scheme declares native light + dark support, which is what
+   Noir and similar extensions check before forcing their own dark mode. */
 :root {
-    color-scheme: light;
+    color-scheme: light dark;
     --canvas: #eef2f6;
     --surface: rgba(255, 255, 255, 0.55);
     --ink: #0d1726;
@@ -37,7 +39,6 @@
 
 @media (prefers-color-scheme: dark) {
     :root {
-        color-scheme: dark;
         --canvas: #0b0f16;
         --surface: rgba(255, 255, 255, 0.03);
         --ink: #eaf0f7;
