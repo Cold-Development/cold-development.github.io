@@ -2,43 +2,75 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <!-- The site ships its own light and dark themes: tell dark-mode extensions to stay off -->
     <meta name="color-scheme" content="light dark">
+    <meta name="supported-color-schemes" content="light dark">
+    <meta name="darkreader-lock">
+    <meta name="theme-color" content="#eef2f6" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#0b0f16" media="(prefers-color-scheme: dark)">
     <title>Cold Development</title>
+    <meta name="description" content="padrewin / Cold Development: Minecraft plugins, open-source projects, a maven repo and jenkins builds.">
+    <meta property="og:title" content="Cold Development">
+    <meta property="og:description" content="it's free💤ing cold. Plugins, projects and builds by padrewin.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://cold-development.github.io/">
+    <meta property="og:image" content="https://cold-development.github.io/assets/images/cold-development.png">
     <link rel="icon" href="assets/icons/cdicon.ico" type="image/x-icon">
-    <link rel="stylesheet" href="assets/backend/style.css?v=1.2">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="preload" href="assets/font/geist.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="stylesheet" href="assets/backend/style.css?v=5747bbd">
 </head>
 <body>
-    <pre>
-        <div class="window-bar">
-            <span class="window-button red"></span>
-            <span class="window-button yellow"></span>
-            <span class="window-button green"></span>
-        </div>
-❄️ it's free💤ing cold
-<hr />
-<u>about;</u>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <div class="frost" aria-hidden="true"></div>
+    <div class="frost-fog" aria-hidden="true"></div>
+    <canvas class="frost-canvas" aria-hidden="true"></canvas>
 
-— projects @ <a href="https://github.com/Cold-Development">github</a>, <a href="https://hub.colddev.dev">maven repo</a>, <a href="https://jenkins.colddev.dev">jenkins</a>
-— music @ <a href="https://open.spotify.com/user/31pzppfcfk7blezxdpovdmdrh6ta?si=bc4c2c209fd44706" alt="spotify" title="don't stalk me bro">spotify</a>
-— plugins @ <a href="https://www.spigotmc.org/resources/authors/padrewin.2013368/" alt="spigotmc" title="get them">spigotmc</a>
-<hr />
-<u>contact;</u>
+    <div class="page">
+        <header class="topbar">
+            <a class="brand" href="https://cold-development.github.io" aria-label="Cold Development home">
+                <img src="assets/icons/cdicon.ico" alt="" width="28" height="28">
+                <span translate="no">cold development</span>
+            </a>
+            <p class="clock"><span class="clock__dot" aria-hidden="true"></span> Bucharest <time id="clock" class="clock__time">--:--</time></p>
+        </header>
 
-— discord @ <a href="https://discord.colddev.dev" alt="padrewin">padrewin</a>
-<hr />
-    <a href="https://padrewin.github.io" class="banner"><img src="./assets/images/padrewin.png" alt="padrewin" title="padrewin"/></a> <a href="https://padrewin.github.io"><img src="assets/icons/pwicon.ico" alt="icon" title="icon" style="width: 35px; height: 35px;"></a> <a href="https://github.com/Cold-Development" class="banner"><img src="./assets/images/cold-development.png" alt="colddev" title="colddev"/></a> <a href="https://cold-development.github.io"><img src="assets/icons/cdicon.ico" alt="icon" title="icon" style="width: 35px; height: 35px;"></a>
+        <main id="main" class="hero">
+            <section class="intro" aria-labelledby="title">
+                <p class="eyebrow" translate="no">padrewin / est. cold</p>
+                <h1 id="title" class="headline">it's <span class="nowrap">free<span class="zz" aria-hidden="true">💤</span>ing</span> cold<span class="headline__dot">.</span></h1>
+                <p class="lede">Minecraft plugins, open-source projects and the build infrastructure behind them. Made by padrewin under Cold Development.</p>
+            </section>
 
-</pre>
-    
-<footer>
-    <p class="footer-text">
-        <i class="fa-solid fa-code"></i> with <i class="fa-regular fa-heart"></i> by padrewin
-        <a id="commit-hash" href="#" target="_blank">@<a href='https://github.com/Cold-Development/cold-development.github.io/commit/58fe35681dc1c8060da823b4dff32ca0f5e42eda' target='_blank'>58fe356</a></a>
-    </p>
-</footer>
+            <nav class="links" aria-label="Links">
+                <h2 class="links__label">work</h2>
+                <ul>
+                    <li><a class="link" href="https://github.com/Cold-Development"><span class="link__name">GitHub</span><span class="link__meta">projects</span><span class="link__arrow" aria-hidden="true">↗</span></a></li>
+                    <li><a class="link" href="https://www.spigotmc.org/resources/authors/padrewin.2013368/" title="get them"><span class="link__name">SpigotMC</span><span class="link__meta">plugins</span><span class="link__arrow" aria-hidden="true">↗</span></a></li>
+                    <li><a class="link" href="https://builtbybit.com/creators/padrewin.479232/"><span class="link__name">BuiltByBit</span><span class="link__meta">marketplace</span><span class="link__arrow" aria-hidden="true">↗</span></a></li>
+                    <li><a class="link" href="https://hub.colddev.dev"><span class="link__name">Maven Repo</span><span class="link__meta">hub.colddev.dev</span><span class="link__arrow" aria-hidden="true">↗</span></a></li>
+                    <li><a class="link" href="https://jenkins.colddev.dev"><span class="link__name">Jenkins</span><span class="link__meta">builds</span><span class="link__arrow" aria-hidden="true">↗</span></a></li>
+                </ul>
 
-    <script src="assets/backend/script.js"></script>
+                <h2 class="links__label">elsewhere</h2>
+                <ul>
+                    <li><button class="link link--copy" type="button" data-copy="padrewin" title="Copy my Discord username"><span class="link__name">Discord</span><span class="link__meta"><span class="copy-label" aria-live="polite">padrewin</span></span><span class="link__arrow copy-icon" aria-hidden="true">⧉</span></button></li>
+                </ul>
+            </nav>
+        </main>
+
+        <footer class="footer">
+            <nav class="badges" aria-label="Profiles">
+                <a href="https://padrewin.github.io" class="badge"><img src="assets/images/padrewin.png" alt="padrewin on GitHub" width="88" height="31"></a>
+                <a href="https://padrewin.github.io" class="badge badge--icon"><img src="assets/icons/pwicon.ico" alt="padrewin logo" width="31" height="31"></a>
+                <a href="https://github.com/Cold-Development" class="badge"><img src="assets/images/cold-development.png" alt="Cold Development on GitHub" width="88" height="31"></a>
+                <a href="https://cold-development.github.io" class="badge badge--icon"><img src="assets/icons/cdicon.ico" alt="Cold Development logo" width="31" height="31"></a>
+            </nav>
+            <p class="credit">&lt;/&gt; with <span class="credit__heart" aria-label="love">♥</span> by padrewin <span id="commit-hash" class="credit__hash" translate="no">@<a href='https://github.com/Cold-Development/cold-development.github.io/commit/5747bbd054f04f4d2f82f13875c219fc0a5f92dc' target='_blank'>5747bbd</a></span></p>
+        </footer>
+    </div>
+
+    <script src="assets/backend/script.js?v=5747bbd"></script>
+    <script src="assets/backend/frost.js?v=5747bbd"></script>
 </body>
 </html>

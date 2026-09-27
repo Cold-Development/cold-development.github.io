@@ -1,12 +1,74 @@
 console.log(
     "%c ❄ %c it's free💤ing cold..",
-    "background-color: #635aa7; color: white; border-radius: 8px;",
+    "background-color: #3b6fe0; color: white; border-radius: 8px;",
     "font-style: italic; color: white"
 );
 
-document.addEventListener('touchmove', (e) => {
-    if (e.target.closest('.scrollable')) {
-        return; // Permite scroll pe elementele cu clasa `scrollable`
-    }
-    e.preventDefault(); // Blochează scroll în alte părți
+// Local time in Bucharest, refreshed every 30s
+const clock = document.getElementById('clock');
+if (clock) {
+    const format = new Intl.DateTimeFormat('en-GB', {
+        hour: '2-digit',
+        minute: '2-digit',
+        timeZone: 'Europe/Bucharest'
+    });
+    const tick = () => {
+        const now = new Date();
+        clock.textContent = format.format(now);
+        clock.dateTime = now.toISOString();
+    };
+    tick();
+    setInterval(tick, 30000);
+}
+
+// Copy-to-clipboard buttons (Discord username), with a non-HTTPS fallback
+function copyText(text) {
+    if (navigator.clipboard && window.isSecureContext) return navigator.clipboard.writeText(text);
+    return new Promise((resolve, reject) => {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        try {
+            document.execCommand('copy') ? resolve() : reject(new Error('copy failed'));
+        } catch (err) {
+            reject(err);
+        } finally {
+            ta.remove();
+        }
+    });
+}
+
+document.querySelectorAll('[data-copy]').forEach((btn) => {
+    const label = btn.querySelector('.copy-label');
+    const icon = btn.querySelector('.copy-icon');
+    const text = btn.dataset.copy;
+    let timer;
+
+    const swap = (labelText, iconText) => {
+        if (label) {
+            label.textContent = labelText;
+            // Restart the flip-in animation on every swap
+            label.classList.remove('flip');
+            void label.offsetWidth;
+            label.classList.add('flip');
+        }
+        if (icon) icon.textContent = iconText;
+    };
+
+    btn.addEventListener('click', () => {
+        copyText(text).then(() => {
+            clearTimeout(timer);
+            btn.classList.add('copied');
+            swap('copied!', '✓');
+            timer = setTimeout(() => {
+                btn.classList.remove('copied');
+                swap(text, '⧉');
+            }, 1400);
+        }).catch(() => {
+            swap('copy failed', '⧉');
+        });
+    });
 });
