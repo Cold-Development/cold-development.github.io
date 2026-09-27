@@ -27,6 +27,8 @@
     --frost-a: rgba(120, 180, 255, 0.45);
     --frost-b: rgba(180, 225, 255, 0.55);
     --heart: #d9466b;
+    --frost-line: rgba(64, 112, 180, 0.3);
+    --frost-fog: rgba(255, 255, 255, 0.9);
     --radius: 10px;
     --ease: cubic-bezier(0.22, 1, 0.36, 1);
     --sans: 'Geist', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
@@ -46,6 +48,8 @@
         --frost-a: rgba(60, 110, 220, 0.3);
         --frost-b: rgba(90, 180, 255, 0.16);
         --heart: #f06a8b;
+        --frost-line: rgba(200, 228, 255, 0.28);
+        --frost-fog: rgba(150, 195, 255, 0.14);
     }
 }
 
@@ -116,7 +120,6 @@ a:focus-visible {
     content: '';
     position: absolute;
     border-radius: 50%;
-    filter: blur(80px);
     will-change: transform;
 }
 .frost::before {
@@ -134,6 +137,24 @@ a:focus-visible {
     left: -10rem;
     background: radial-gradient(circle, var(--frost-b), transparent 65%);
     animation: drift 28s ease-in-out infinite alternate-reverse;
+}
+
+/* Window frost: crystals are drawn by frost.js, the haze builds and fades with them */
+.frost-fog,
+.frost-canvas {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+}
+.frost-fog {
+    opacity: 0;
+    background:
+        radial-gradient(ellipse 75% 70% at 50% 50%, transparent 55%, var(--frost-fog) 100%);
+}
+.frost-canvas {
+    width: 100%;
+    height: 100%;
 }
 
 /* Page frame */
@@ -157,6 +178,7 @@ a:focus-visible {
     font-family: var(--mono);
     font-size: 13px;
     color: var(--mute);
+    text-shadow: 0 0 6px var(--canvas), 0 0 12px var(--canvas);
 }
 
 .brand {
@@ -340,6 +362,7 @@ a:focus-visible {
     font-family: var(--mono);
     font-size: 13px;
     color: var(--mute);
+    text-shadow: 0 0 6px var(--canvas), 0 0 12px var(--canvas);
 }
 .credit__heart {
     color: var(--heart);
