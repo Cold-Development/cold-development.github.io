@@ -320,6 +320,61 @@ a:focus-visible {
     opacity: 0.7;
 }
 
+/* Copy button row (Discord): same look as a link row */
+.link--copy {
+    width: 100%;
+    margin: 0;
+    border: 0;
+    border-bottom: 1px solid var(--hairline);
+    background: none;
+    font: inherit;
+    color: inherit;
+    text-align: left;
+    cursor: pointer;
+}
+.link--copy:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 4px;
+    border-radius: 4px;
+}
+.copy-label {
+    display: inline-block;
+}
+.copy-label.flip {
+    animation: flip-in 0.35s var(--ease);
+}
+.link--copy.copied,
+.link--copy.copied .link__meta,
+.link--copy.copied .link__arrow {
+    color: var(--accent);
+}
+.link--copy.copied .link__arrow {
+    transform: scale(1.25);
+}
+.link--copy.copied {
+    animation: copied-flash 0.6s var(--ease);
+}
+
+@keyframes flip-in {
+    from {
+        opacity: 0;
+        transform: translateY(60%);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes copied-flash {
+    from {
+        background-color: color-mix(in srgb, var(--accent) 14%, transparent);
+    }
+    to {
+        background-color: transparent;
+    }
+}
+
 /* Footer */
 .footer {
     display: flex;
