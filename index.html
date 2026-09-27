@@ -2,43 +2,69 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="color-scheme" content="light dark">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="color-scheme" content="dark">
+    <meta name="theme-color" content="#0e0b14">
     <title>Cold Development</title>
+    <meta name="description" content="padrewin / Cold Development: Minecraft plugins, open-source projects, a maven repo and jenkins builds.">
+    <meta property="og:title" content="Cold Development">
+    <meta property="og:description" content="it's free💤ing cold. Plugins, projects and builds by padrewin.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://cold-development.github.io/">
+    <meta property="og:image" content="https://cold-development.github.io/assets/images/cold-development.png">
     <link rel="icon" href="assets/icons/cdicon.ico" type="image/x-icon">
-    <link rel="stylesheet" href="assets/backend/style.css?v=1.2">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="preload" href="assets/font/coldfont.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="stylesheet" href="assets/backend/style.css?v=2.0">
 </head>
 <body>
-    <pre>
-        <div class="window-bar">
-            <span class="window-button red"></span>
-            <span class="window-button yellow"></span>
-            <span class="window-button green"></span>
-        </div>
-❄️ it's free💤ing cold
-<hr />
-<u>about;</u>
+    <a class="skip-link" href="#main">Skip to content</a>
 
-— projects @ <a href="https://github.com/Cold-Development">github</a>, <a href="https://hub.colddev.dev">maven repo</a>, <a href="https://jenkins.colddev.dev">jenkins</a>
-— music @ <a href="https://open.spotify.com/user/31pzppfcfk7blezxdpovdmdrh6ta?si=bc4c2c209fd44706" alt="spotify" title="don't stalk me bro">spotify</a>
-— plugins @ <a href="https://www.spigotmc.org/resources/authors/padrewin.2013368/" alt="spigotmc" title="get them">spigotmc</a>
-<hr />
-<u>contact;</u>
+    <main id="main" class="stage">
+        <article class="terminal" aria-labelledby="title">
+            <div class="terminal__bar" aria-hidden="true">
+                <span class="dot dot--red"></span>
+                <span class="dot dot--yellow"></span>
+                <span class="dot dot--green"></span>
+                <span class="terminal__path" translate="no">padrewin@cold: ~</span>
+            </div>
 
-— discord @ <a href="https://discord.colddev.dev" alt="padrewin">padrewin</a>
-<hr />
-    <a href="https://padrewin.github.io" class="banner"><img src="./assets/images/padrewin.png" alt="padrewin" title="padrewin"/></a> <a href="https://padrewin.github.io"><img src="assets/icons/pwicon.ico" alt="icon" title="icon" style="width: 35px; height: 35px;"></a> <a href="https://github.com/Cold-Development" class="banner"><img src="./assets/images/cold-development.png" alt="colddev" title="colddev"/></a> <a href="https://cold-development.github.io"><img src="assets/icons/cdicon.ico" alt="icon" title="icon" style="width: 35px; height: 35px;"></a>
+            <div class="terminal__body">
+                <p class="prompt" aria-hidden="true"><span class="prompt__sign">$</span> whoami</p>
+                <h1 id="title" class="headline"><span aria-hidden="true">❄️</span> it's free<span class="zz" aria-hidden="true">💤</span>ing cold</h1>
 
-</pre>
-    
-<footer>
-    <p class="footer-text">
-        <i class="fa-solid fa-code"></i> with <i class="fa-regular fa-heart"></i> by padrewin
-        <a id="commit-hash" href="#" target="_blank">@loading...</a>
-    </p>
-</footer>
+                <section class="block" aria-labelledby="about">
+                    <h2 id="about" class="block__label">about;</h2>
+                    <ul class="rows">
+                        <li><span class="rows__key">projects</span><span class="rows__at">@</span><span class="rows__val"><a href="https://github.com/Cold-Development">github</a>, <a href="https://hub.colddev.dev">maven repo</a>, <a href="https://jenkins.colddev.dev">jenkins</a></span></li>
+                        <li><span class="rows__key">music</span><span class="rows__at">@</span><span class="rows__val"><a href="https://open.spotify.com/user/31pzppfcfk7blezxdpovdmdrh6ta?si=bc4c2c209fd44706" title="don't stalk me bro">spotify</a></span></li>
+                        <li><span class="rows__key">plugins</span><span class="rows__at">@</span><span class="rows__val"><a href="https://www.spigotmc.org/resources/authors/padrewin.2013368/" title="get them">spigotmc</a></span></li>
+                    </ul>
+                </section>
 
+                <section class="block" aria-labelledby="contact">
+                    <h2 id="contact" class="block__label">contact;</h2>
+                    <ul class="rows">
+                        <li><span class="rows__key">discord</span><span class="rows__at">@</span><span class="rows__val"><a href="https://discord.colddev.dev">padrewin</a></span></li>
+                    </ul>
+                </section>
+
+                <nav class="badges" aria-label="Profiles">
+                    <a href="https://padrewin.github.io" class="badge"><img src="assets/images/padrewin.png" alt="padrewin on GitHub" width="88" height="31"></a>
+                    <a href="https://padrewin.github.io" class="badge badge--icon"><img src="assets/icons/pwicon.ico" alt="padrewin logo" width="35" height="35"></a>
+                    <a href="https://github.com/Cold-Development" class="badge"><img src="assets/images/cold-development.png" alt="Cold Development on GitHub" width="88" height="31"></a>
+                    <a href="https://cold-development.github.io" class="badge badge--icon"><img src="assets/icons/cdicon.ico" alt="Cold Development logo" width="35" height="35"></a>
+                </nav>
+
+                <p class="prompt prompt--idle" aria-hidden="true"><span class="prompt__sign">$</span> <span class="cursor"></span></p>
+            </div>
+        </article>
+
+        <footer class="footer">
+            <p><span class="footer__glyph" aria-hidden="true">&lt;/&gt;</span> with <span class="footer__heart" aria-label="love">♥</span> by padrewin <span id="commit-hash" class="footer__hash" translate="no">@loading...</span></p>
+        </footer>
+    </main>
+
+    <div class="grain" aria-hidden="true"></div>
     <script src="assets/backend/script.js"></script>
 </body>
 </html>
