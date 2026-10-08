@@ -1,18 +1,17 @@
 # DESIGN.md
 
-The visual system of cold-development.github.io: a frozen window.
+The visual system of cold-development.github.io: a frozen window, kept quiet and professional.
 
 ## Idea
 
-The page is a pane of frosted glass in front of cracked lake ice. The content sits on the glass; one slab of clear ice holds the links. Frost forms from the window frame inward on load, the visitor's cursor (or tap) wipes it clear to show the sharp ice behind, and it slowly freezes back over. The headline does the same in type: it freezes from melted to solid on load.
+The page sits on a pane of frosted glass over cracked lake ice. The ice shows only as soft, diffused shapes through the frost; a few fine crystals grow in from the corners. One pane of clearer glass holds the links. Nothing reacts to the pointer except the controls themselves.
 
-Glass and blur have one job here (a window you can see through once you wipe it), not decoration. Don't add more glass panes; one slab is the point.
+Earlier versions had pointer-driven effects (wiping the frost, cracking the ice on click, melting letters, a tilting slab). They were removed on purpose because they read as playful rather than professional; don't bring them back without asking.
 
 ## Layers (back to front)
 
-1. `.ice-scene` canvas: lake ice, drawn as vectors at device resolution (sharp at 2x). Voronoi slabs shaded from `--scene-deep` to `--scene-mid` (darker toward each slab's middle), a fine grain, a net of hairline fractures, main cracks with a soft glow and a bright core in `--scene-crack`, and air bubbles. Rendered once per size/theme.
-2. `.ice-frost` canvas: frost. A blurred copy of the scene, tinted with `--frost-tint` (thicker toward the frame), a grain tile, and fern crystals in `--frost-crystal`. The wipe map erases it; it refreezes at about 30% per second.
-3. Content: headline and lede directly on the frost; the link slab is glass (`backdrop-filter: blur(22px) saturate(160%)`).
+1. `.ice` canvas (`ice.js`): the lake ice is drawn offscreen as vectors (Voronoi slabs, hairlines, cracks, bubbles in the `--scene-*` colours), then shown only as a heavily blurred copy under an even `--frost-tint` veil (thicker toward the frame), fine grain, and sparse fern crystals at the four corners in `--frost-crystal`. Drawn once per size and colour scheme.
+2. Content: headline and lede directly on the frost; the link slab is glass (`backdrop-filter: blur(20px) saturate(150%)`), with a fixed light on its upper-left edge.
 
 ## Tokens
 
@@ -21,27 +20,21 @@ Glass and blur have one job here (a window you can see through once you wipe it)
 | `--ink` text | `#062438` | `#e9f8ff` |
 | `--body` secondary text | `#24485f` | `#b3d6e8` |
 | `--mute` labels, meta | `#4d6e82` | `#7fa3b7` |
-| `--accent` meltwater, hover/focus/copied | `#0a6f9c` | `#86dcff` |
-| `--glass` slab fill | `rgba(236,248,255,.5)` | `rgba(6,28,44,.46)` |
+| `--accent` hover/focus/copied, the z's | `#0a6f9c` | `#86dcff` |
+| `--glass` slab fill | `rgba(240,249,255,.55)` | `rgba(6,28,44,.5)` |
 | `--scene-deep` / `--scene-mid` | `#4f9fcb` / `#a6d8f0` | `#020a12` / `#0e3b59` |
 
-One accent only. Shadows are tinted with the scene hue and always have a y-offset; no black or zero-offset glows.
+One accent only. Shadows are tinted with the scene hue and always have a y-offset.
 
 ## Type
 
-- **Display:** Climate Crisis (self-hosted, `assets/font/climate-crisis.woff2`). Its `YEAR` axis comes from Arctic sea-ice data: 1979 is solid, 2050 is melted. The headline animates `YEAR` 2050 → 1979 once on load (`@keyframes freeze`). Max size 6rem, tracking -0.035em, lowercase. The "zzz" inside "free…ing" is three text z's in the accent colour, rising in size and height and bobbing in turn (`@keyframes snore`).
-- **Body / UI:** Geist variable (`assets/font/geist.woff2`). Row names 550 weight, meta 14px with tabular numerals.
-- No monospace, no all-caps labels, no eyebrow above the headline.
+- Geist variable (`assets/font/geist.woff2`) is the only typeface.
+- Headline: 600 weight, up to 5.25rem, tracking -0.04em, lowercase. The "zzz" inside "free…ing" is three small static z's in the accent colour, rising in size and height like the 💤 emoji.
+- Row names 550 weight; meta 14px with tabular numerals. No monospace, no all-caps labels, no eyebrow above the headline.
 
 ## Shape and motion
 
-- Radii: slab 22px, rows 12px (inner tighter than outer).
-- Rows are separated by etched 1px lines (`--etch`), not cards.
+- Radii: slab 20px, rows 10px (inner tighter than outer). Rows are separated by etched 1px lines (`--etch`), not cards.
 - Icons: Phosphor (regular) arrow-up-right, copy, check, inlined as SVG with `fill: currentColor`.
-- Motion: the one authored moment is the load (frost forming + headline freezing, ~2.5s, ease-out). Everything else answers the visitor:
-  - **Wipe:** the cursor or a tap clears the frost, which refreezes.
-  - **Melt:** headline letters near the cursor melt (`YEAR` toward 2050) and refreeze slowly when it leaves (`fx.js`).
-  - **Crack:** a click on the background cracks the lake ice from that point (jagged rays plus a broken fracture ring), knocks the frost off around it, and sends a shock ring over the glass (`.impact`).
-  - **Slab:** tilts up to ~7° toward the cursor; a glare and a lit edge follow it (`--mx`/`--my`). Fine pointers only.
-  - **Rows:** a glint of light runs through a row on hover. Copying flash-freezes the Discord row with frost bursting from the icon, then it melts. All of it turns off under `prefers-reduced-motion` (static frost, solid headline).
+- Motion is limited to: one gentle settle-in on load (`@keyframes settle`), the row hover tint with a 2px arrow nudge, and the copy icon/label swap. All of it is off under `prefers-reduced-motion`.
 - `prefers-reduced-transparency` or no `backdrop-filter` support: the slab becomes solid `--glass-solid`.

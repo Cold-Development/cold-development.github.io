@@ -1,13 +1,4 @@
-/* Fonts, both self-hosted.
-   Climate Crisis: display face whose YEAR axis is built from Arctic sea-ice
-   data (1979 = solid, 2050 = melted). Geist: body and interface text. */
-@font-face {
-    font-family: 'Climate Crisis';
-    src: url('../font/climate-crisis.woff2') format('woff2');
-    font-weight: 400;
-    font-style: normal;
-    font-display: swap;
-}
+/* Geist, self-hosted, variable weight: the only typeface */
 @font-face {
     font-family: 'Geist';
     src: url('../font/geist.woff2') format('woff2');
@@ -17,7 +8,7 @@
 }
 
 /* Tokens. Light is a glacier at noon, dark is polar night.
-   The --scene-* and --frost-* values are read by ice.js for the canvases. */
+   The --scene-* and --frost-* values are read by ice.js for the canvas. */
 :root {
     color-scheme: light dark;
 
@@ -27,29 +18,25 @@
     --accent: #0a6f9c;
     --heart: #c43d63;
 
-    --glass: rgba(236, 248, 255, 0.5);
+    --glass: rgba(240, 249, 255, 0.55);
     --glass-solid: #e4f3fb;
     --glass-edge: rgba(255, 255, 255, 0.85);
-    --glass-under: rgba(20, 88, 128, 0.16);
-    --glass-sheen: rgba(255, 255, 255, 0.55);
-    --row-hover: rgba(10, 111, 156, 0.09);
-    --edge-glow: rgba(255, 255, 255, 1);
-    --glare: rgba(255, 255, 255, 0.42);
-    --glint: rgba(255, 255, 255, 0.75);
-    --flash-frost: rgba(255, 255, 255, 0.95);
-    --etch: rgba(10, 70, 104, 0.14);
-    --shadow: 0 2px 6px rgba(12, 70, 104, 0.1), 0 34px 70px -28px rgba(12, 70, 104, 0.45);
+    --glass-under: rgba(20, 88, 128, 0.14);
+    --glass-sheen: rgba(255, 255, 255, 0.5);
+    --edge-light: rgba(255, 255, 255, 1);
+    --row-hover: rgba(10, 111, 156, 0.07);
+    --etch: rgba(10, 70, 104, 0.12);
+    --shadow: 0 2px 6px rgba(12, 70, 104, 0.08), 0 30px 60px -28px rgba(12, 70, 104, 0.4);
 
     --scene-deep: #4f9fcb;
     --scene-mid: #a6d8f0;
     --scene-crack: rgba(255, 255, 255, 0.95);
-    --frost-tint: rgba(246, 252, 255, 0.5);
+    --frost-tint: rgba(246, 252, 255, 0.55);
     --frost-crystal: rgba(255, 255, 255, 0.95);
 
-    --radius-slab: 22px;
-    --radius-row: 12px;
+    --radius-slab: 20px;
+    --radius-row: 10px;
     --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
-    --display: 'Climate Crisis', 'Geist', system-ui, sans-serif;
     --sans: 'Geist', system-ui, -apple-system, 'Segoe UI', sans-serif;
 }
 
@@ -61,23 +48,20 @@
         --accent: #86dcff;
         --heart: #ff7d9e;
 
-        --glass: rgba(6, 28, 44, 0.46);
+        --glass: rgba(6, 28, 44, 0.5);
         --glass-solid: #0a2233;
-        --glass-edge: rgba(186, 236, 255, 0.24);
+        --glass-edge: rgba(186, 236, 255, 0.2);
         --glass-under: rgba(0, 6, 12, 0.5);
-        --glass-sheen: rgba(186, 236, 255, 0.09);
-        --row-hover: rgba(134, 220, 255, 0.08);
-        --edge-glow: rgba(170, 235, 255, 0.9);
-        --glare: rgba(150, 220, 255, 0.1);
-        --glint: rgba(170, 235, 255, 0.16);
-        --flash-frost: rgba(200, 240, 255, 0.42);
-        --etch: rgba(186, 236, 255, 0.12);
-        --shadow: 0 2px 8px rgba(0, 6, 14, 0.4), 0 40px 80px -30px rgba(0, 6, 14, 0.9);
+        --glass-sheen: rgba(186, 236, 255, 0.07);
+        --edge-light: rgba(170, 235, 255, 0.7);
+        --row-hover: rgba(134, 220, 255, 0.07);
+        --etch: rgba(186, 236, 255, 0.1);
+        --shadow: 0 2px 8px rgba(0, 6, 14, 0.4), 0 36px 72px -30px rgba(0, 6, 14, 0.85);
 
         --scene-deep: #020a12;
         --scene-mid: #0e3b59;
-        --scene-crack: rgba(130, 218, 255, 0.62);
-        --frost-tint: rgba(150, 205, 235, 0.13);
+        --scene-crack: rgba(130, 218, 255, 0.6);
+        --frost-tint: rgba(150, 205, 235, 0.17);
         --frost-crystal: rgba(210, 242, 255, 0.6);
     }
 }
@@ -89,7 +73,7 @@
 }
 
 html {
-    background-color: var(--scene-deep);
+    background-color: var(--glass-solid);
     -webkit-text-size-adjust: 100%;
     scrollbar-color: var(--mute) transparent;
 }
@@ -139,41 +123,20 @@ a {
     top: 1rem;
 }
 
-/* The two canvases fill the window behind everything */
-.ice-scene,
-.ice-frost {
+/* The frosted window fills the viewport behind everything */
+.ice {
     position: fixed;
     inset: 0;
+    z-index: -1;
     width: 100%;
     height: 100%;
-    z-index: -2;
     pointer-events: none;
-}
-.ice-frost {
-    z-index: -1;
-}
-
-/* Shock ring where a click cracks the ice (ice.js adds and removes it) */
-.impact {
-    position: fixed;
-    z-index: 0;
-    width: 20px;
-    height: 20px;
-    margin: -10px 0 0 -10px;
-    overflow: visible;
-    pointer-events: none;
-    fill: none;
-    stroke: var(--edge-glow);
-    stroke-width: 1.5;
-    animation: impact 0.7s var(--ease-out) forwards;
-}
-.impact circle {
-    vector-effect: non-scaling-stroke;
+    animation: settle 1.2s var(--ease-out) both;
 }
 
 /* Page frame */
 .page {
-    width: min(100%, 76rem);
+    width: min(100%, 74rem);
     min-height: 100dvh;
     margin: 0 auto;
     display: grid;
@@ -181,6 +144,7 @@ a {
     gap: 2.5rem;
     padding: max(1.5rem, env(safe-area-inset-top)) max(1.5rem, env(safe-area-inset-right))
              max(1.5rem, env(safe-area-inset-bottom)) max(1.5rem, env(safe-area-inset-left));
+    animation: settle 0.9s 0.15s var(--ease-out) both;
 }
 
 .topbar {
@@ -212,74 +176,64 @@ a {
     font-variant-numeric: tabular-nums;
 }
 
-/* Hero: the frozen headline on the window, the link slab as a pane of ice */
+/* Hero: the headline on the frost, the links in one pane of clear ice */
 .hero {
     display: grid;
-    grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
     align-items: center;
     gap: 3rem 5rem;
 }
 
 .headline {
     margin: 0;
-    font-family: var(--display);
-    font-weight: 400;
-    font-size: clamp(3.4rem, 1.6rem + 5.6vw, 6rem);
+    font-size: clamp(3rem, 1.5rem + 4.6vw, 5.25rem);
+    font-weight: 600;
     line-height: 0.98;
-    letter-spacing: -0.035em;
+    letter-spacing: -0.04em;
     text-wrap: balance;
-    font-variation-settings: 'YEAR' 1979;
-    animation: freeze 2.4s var(--ease-out) both;
 }
 .nowrap {
     white-space: nowrap;
 }
-/* Sleepy z's rising out of "free…ing": small to large, low to high,
-   bobbing one after another like the 💤 emoji come to life */
+
+/* Three small z's rising out of "free…ing", like the 💤 emoji */
 .zz {
     display: inline-flex;
     align-items: flex-start;
-    gap: 0.03em;
+    gap: 0.04em;
     height: 0.9em;
-    margin: 0 0.05em 0 0.04em;
+    margin: 0 0.04em;
     vertical-align: top;
     color: var(--accent);
+    font-weight: 600;
     letter-spacing: 0;
     line-height: 1;
-}
-.zz span {
-    display: inline-block;
-    animation: snore 2.8s ease-in-out infinite;
 }
 .zz span:nth-child(1) {
     font-size: 0.24em;
     margin-top: 1.9em;
 }
 .zz span:nth-child(2) {
-    font-size: 0.32em;
-    margin-top: 0.75em;
-    animation-delay: 0.35s;
+    font-size: 0.31em;
+    margin-top: 0.8em;
 }
 .zz span:nth-child(3) {
-    font-size: 0.42em;
-    margin-top: 0;
-    animation-delay: 0.7s;
+    font-size: 0.4em;
 }
 
 .lede {
-    max-width: 36ch;
-    margin: 2rem 0 0;
-    font-size: 1.15rem;
+    max-width: 38ch;
+    margin: 1.75rem 0 0;
+    font-size: 1.125rem;
     line-height: 1.6;
     color: var(--body);
     text-wrap: pretty;
 }
 
-/* Glass slab: blur of the frost behind it, a lit top edge, a shaded bottom
-   edge and a soft diagonal sheen, like a cut block of clear ice. */
+/* The link pane: frost blurred behind it, a lit top edge, a shaded bottom edge */
 .slab {
     position: relative;
-    padding: 1.6rem 1.25rem 1.25rem;
+    padding: 1.5rem 1.25rem 1.25rem;
     border-radius: var(--radius-slab);
     background: var(--glass);
     border: 1px solid var(--glass-edge);
@@ -287,12 +241,9 @@ a {
         inset 0 1px 0 var(--glass-edge),
         inset 0 -1px 0 var(--glass-under),
         var(--shadow);
-    -webkit-backdrop-filter: blur(22px) saturate(160%);
-    backdrop-filter: blur(22px) saturate(160%);
+    -webkit-backdrop-filter: blur(20px) saturate(150%);
+    backdrop-filter: blur(20px) saturate(150%);
     isolation: isolate;
-    --mx: 30%;
-    --my: 0%;
-    will-change: transform;
 }
 .slab::before {
     content: '';
@@ -300,19 +251,17 @@ a {
     inset: 0;
     z-index: -1;
     border-radius: inherit;
-    background:
-        radial-gradient(28rem circle at var(--mx) var(--my), var(--glare), transparent 55%),
-        linear-gradient(125deg, var(--glass-sheen) 0%, transparent 38%, transparent 70%, var(--glass-sheen) 100%);
+    background: linear-gradient(125deg, var(--glass-sheen) 0%, transparent 40%, transparent 72%, var(--glass-sheen) 100%);
     pointer-events: none;
 }
-/* The edge catches the light nearest the cursor */
+/* Light catching the upper-left edge of the pane */
 .slab::after {
     content: '';
     position: absolute;
     inset: -1px;
     border-radius: inherit;
     padding: 1px;
-    background: radial-gradient(16rem circle at var(--mx) var(--my), var(--edge-glow), transparent 70%);
+    background: radial-gradient(18rem circle at 18% 0%, var(--edge-light), transparent 70%);
     -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
     -webkit-mask-composite: xor;
     mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
@@ -339,10 +288,9 @@ a {
 }
 
 .row {
-    position: relative;
     width: 100%;
     display: grid;
-    grid-template-columns: 1fr auto 1.1rem;
+    grid-template-columns: 1fr auto 1.05rem;
     align-items: center;
     gap: 1rem;
     padding: 0.85rem 0.75rem;
@@ -353,30 +301,10 @@ a {
     color: inherit;
     text-align: left;
     cursor: pointer;
-    overflow: hidden;
-    isolation: isolate;
-    transition: background-color 0.25s var(--ease-out), color 0.2s var(--ease-out);
-}
-.row > * {
-    position: relative;
-    z-index: 1;
-}
-/* A glint of light runs through the row on hover, like light through ice */
-.row::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    z-index: 0;
-    background: linear-gradient(105deg, transparent 30%, var(--glint) 50%, transparent 70%);
-    transform: translateX(-120%);
-    pointer-events: none;
-}
-.row:hover::after {
-    transform: translateX(120%);
-    transition: transform 0.8s var(--ease-out);
+    transition: background-color 0.2s var(--ease-out), color 0.2s var(--ease-out);
 }
 .row__name {
-    font-size: 1.2rem;
+    font-size: 1.15rem;
     font-weight: 550;
     letter-spacing: -0.02em;
 }
@@ -387,15 +315,14 @@ a {
     font-variant-numeric: tabular-nums;
 }
 .row__icon {
-    width: 1.1rem;
-    height: 1.1rem;
+    width: 1.05rem;
+    height: 1.05rem;
     fill: currentColor;
     color: var(--mute);
-    transition: transform 0.35s var(--ease-out), color 0.2s var(--ease-out), opacity 0.2s var(--ease-out);
+    transition: transform 0.25s var(--ease-out), color 0.2s var(--ease-out), opacity 0.2s var(--ease-out);
 }
 .row:hover {
     background-color: var(--row-hover);
-    color: var(--accent);
 }
 .row:hover .row__icon {
     color: var(--accent);
@@ -403,21 +330,14 @@ a {
 a.row:hover .row__icon {
     transform: translate(2px, -2px);
 }
-.row:active {
-    transform: translateY(1px);
-}
 
-/* Copy row: the copy glyph swaps to a check, the username to "copied!" */
+/* Copy row: the copy icon swaps to a check, the username to "copied!" */
 .row--copy .copy-icon {
     grid-column: 3;
     grid-row: 1;
 }
 .copy-icon--done {
     opacity: 0;
-    transform: scale(0.6);
-}
-.row--copy.copied {
-    color: var(--accent);
 }
 .row--copy.copied .row__meta,
 .row--copy.copied .row__icon {
@@ -425,34 +345,15 @@ a.row:hover .row__icon {
 }
 .row--copy.copied .copy-icon--copy {
     opacity: 0;
-    transform: scale(0.6);
 }
 .row--copy.copied .copy-icon--done {
     opacity: 1;
-    transform: scale(1);
 }
 .copy-label {
     display: inline-block;
 }
-/* Copying flash-freezes the row: frost bursts out from the icon, then melts */
-.row--copy::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    z-index: 0;
-    border-radius: inherit;
-    background:
-        radial-gradient(circle at 95% 50%, var(--flash-frost), transparent 75%),
-        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.2' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.6 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-    opacity: 0;
-    transform-origin: 95% 50%;
-    pointer-events: none;
-}
-.row--copy.copied::before {
-    animation: flash-freeze 1.4s var(--ease-out) both;
-}
 .copy-label.flip {
-    animation: flip-in 0.35s var(--ease-out);
+    animation: settle 0.3s var(--ease-out);
 }
 
 /* Footer */
@@ -474,14 +375,15 @@ a.row:hover .row__icon {
     display: inline-flex;
     line-height: 0;
     border-radius: 4px;
-    transition: transform 0.25s var(--ease-out);
+    opacity: 0.9;
+    transition: opacity 0.2s var(--ease-out);
 }
 .badge img {
     display: block;
     border-radius: 3px;
 }
 .badge:hover {
-    transform: translateY(-2px);
+    opacity: 1;
 }
 
 .credit {
@@ -510,63 +412,15 @@ a.row:hover .row__icon {
     }
 }
 
-@keyframes freeze {
-    from {
-        font-variation-settings: 'YEAR' 2050;
-        opacity: 0.2;
-    }
-    to {
-        font-variation-settings: 'YEAR' 1979;
-        opacity: 1;
-    }
-}
-
-@keyframes snore {
-    0%,
-    100% {
-        transform: translateY(0);
-        opacity: 1;
-    }
-    50% {
-        transform: translateY(-0.35em);
-        opacity: 0.55;
-    }
-}
-
-@keyframes impact {
-    from {
-        transform: scale(0.4);
-        opacity: 1;
-    }
-    to {
-        transform: scale(11);
-        opacity: 0;
-    }
-}
-
-@keyframes flash-freeze {
-    0% {
-        opacity: 0;
-        transform: scale(0.2);
-    }
-    14% {
-        opacity: 1;
-        transform: scale(1);
-    }
-    100% {
-        opacity: 0;
-        transform: scale(1);
-    }
-}
-
-@keyframes flip-in {
+/* The one motion: the window and the page settle in once on load */
+@keyframes settle {
     from {
         opacity: 0;
-        transform: translateY(60%);
+        transform: translateY(6px);
     }
     to {
         opacity: 1;
-        transform: translateY(0);
+        transform: none;
     }
 }
 
@@ -584,13 +438,13 @@ a.row:hover .row__icon {
     }
     .lede {
         font-size: 1.05rem;
-        margin-top: 1.5rem;
+        margin-top: 1.4rem;
     }
     .slab {
-        padding: 1.25rem 0.6rem 0.75rem;
+        padding: 1.2rem 0.6rem 0.75rem;
     }
     .row__name {
-        font-size: 1.1rem;
+        font-size: 1.08rem;
     }
     .footer {
         justify-content: flex-start;
