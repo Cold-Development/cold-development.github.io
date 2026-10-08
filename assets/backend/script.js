@@ -1,6 +1,6 @@
 console.log(
     "%c ❄ %c it's free💤ing cold..",
-    "background-color: #3b6fe0; color: white; border-radius: 8px;",
+    "background-color: #0a6f9c; color: white; border-radius: 8px;",
     "font-style: italic; color: white"
 );
 
@@ -43,32 +43,30 @@ function copyText(text) {
 
 document.querySelectorAll('[data-copy]').forEach((btn) => {
     const label = btn.querySelector('.copy-label');
-    const icon = btn.querySelector('.copy-icon');
     const text = btn.dataset.copy;
     let timer;
 
-    const swap = (labelText, iconText) => {
-        if (label) {
-            label.textContent = labelText;
-            // Restart the flip-in animation on every swap
-            label.classList.remove('flip');
-            void label.offsetWidth;
-            label.classList.add('flip');
-        }
-        if (icon) icon.textContent = iconText;
+    // The .copied class swaps the copy icon for a check (see style.css)
+    const setLabel = (value) => {
+        if (!label) return;
+        label.textContent = value;
+        // Restart the flip-in animation on every swap
+        label.classList.remove('flip');
+        void label.offsetWidth;
+        label.classList.add('flip');
     };
 
     btn.addEventListener('click', () => {
         copyText(text).then(() => {
             clearTimeout(timer);
             btn.classList.add('copied');
-            swap('copied!', '✓');
+            setLabel('copied!');
             timer = setTimeout(() => {
                 btn.classList.remove('copied');
-                swap(text, '⧉');
+                setLabel(text);
             }, 1400);
         }).catch(() => {
-            swap('copy failed', '⧉');
+            setLabel('copy failed');
         });
     });
 });
