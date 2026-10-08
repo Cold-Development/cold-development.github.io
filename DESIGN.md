@@ -10,7 +10,7 @@ Glass and blur have one job here (a window you can see through once you wipe it)
 
 ## Layers (back to front)
 
-1. `.ice-scene` canvas: lake ice. Voronoi slabs shaded from `--scene-deep` to `--scene-mid`, main cracks plus a net of hairline fractures in `--scene-crack`, a few air bubbles. Rendered once per size/theme.
+1. `.ice-scene` canvas: lake ice, drawn as vectors at device resolution (sharp at 2x). Voronoi slabs shaded from `--scene-deep` to `--scene-mid` (darker toward each slab's middle), a fine grain, a net of hairline fractures, main cracks with a soft glow and a bright core in `--scene-crack`, and air bubbles. Rendered once per size/theme.
 2. `.ice-frost` canvas: frost. A blurred copy of the scene, tinted with `--frost-tint` (thicker toward the frame), a grain tile, and fern crystals in `--frost-crystal`. The wipe map erases it; it refreezes at about 30% per second.
 3. Content: headline and lede directly on the frost; the link slab is glass (`backdrop-filter: blur(22px) saturate(160%)`).
 

@@ -70,92 +70,174 @@
 
     // ---- Behind the glass: lake ice with cracks ---------------------------
 
-    function voronoiField(w, h, count) {
-        const points = [];
-        for (let i = 0; i < count; i++) points.push([Math.random() * w, Math.random() * h, Math.random()]);
-        const nearest = new Float32Array(w * h);
-        const edge = new Float32Array(w * h);
-        const shade = new Float32Array(w * h);
-        for (let y = 0; y < h; y++) {
-            for (let x = 0; x < w; x++) {
-                let d1 = Infinity;
-                let d2 = Infinity;
-                let s = 0;
-                for (const p of points) {
-                    const dx = p[0] - x;
-                    const dy = p[1] - y;
-                    const d = dx * dx + dy * dy;
-                    if (d < d1) { d2 = d1; d1 = d; s = p[2]; }
-                    else if (d < d2) { d2 = d; }
+    // Exact Voronoi cells as polygons: start each site with the whole
+    // (padded) viewport and clip it by the bisector with every other site,
+    // nearest first, until no farther site can still cut it.
+    function voronoiCells(sites) {
+        const pad = 40;
+        const frame = [[-pad, -pad], [width + pad, -pad], [width + pad, height + pad], [-pad, height + pad]];
+        return sites.map((site) => {
+            let poly = frame;
+            const others = sites
+                .filter((o) => o !== site)
+                .map((o) => ({ o, d: Math.hypot(o.x - site.x, o.y - site.y) }))
+                .sort((a, b) => a.d - b.d);
+            for (const { o, d } of others) {
+                let reach = 0;
+                for (const [px, py] of poly) reach = Math.max(reach, Math.hypot(px - site.x, py - site.y));
+                if (d / 2 > reach) break;
+                const mx = (site.x + o.x) / 2;
+                const my = (site.y + o.y) / 2;
+                const nx = o.x - site.x;
+                const ny = o.y - site.y;
+                const clipped = [];
+                for (let i = 0; i < poly.length; i++) {
+                    const a = poly[i];
+                    const b = poly[(i + 1) % poly.length];
+                    const da = (a[0] - mx) * nx + (a[1] - my) * ny;
+                    const db = (b[0] - mx) * nx + (b[1] - my) * ny;
+                    if (da <= 0) clipped.push(a);
+                    if ((da < 0 && db > 0) || (da > 0 && db < 0)) {
+                        const t = da / (da - db);
+                        clipped.push([a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t]);
+                    }
                 }
-                const i = y * w + x;
-                d1 = Math.sqrt(d1);
-                nearest[i] = d1;
-                edge[i] = Math.sqrt(d2) - d1;
-                shade[i] = s;
+                poly = clipped;
+                if (poly.length < 3) break;
             }
-        }
-        return { nearest, edge, shade };
+            return { site, poly };
+        });
     }
 
-    function renderScene() {
-        // Low-res field, scaled up smoothly: the frost and glass soften it anyway
-        const step = 3;
-        const w = Math.ceil(width / step);
-        const h = Math.ceil(height / step);
-        const big = voronoiField(w, h, Math.max(24, Math.round((w * h) / 2200)));
-        const fine = voronoiField(w, h, Math.max(60, Math.round((w * h) / 380)));
-
-        const image = new ImageData(w, h);
-        const data = image.data;
-        const { deep, mid, crackRGBA } = colors;
-
-        for (let y = 0; y < h; y++) {
-            const depth = y / h;
-            for (let x = 0; x < w; x++) {
-                const i = y * w + x;
-                // Each slab of ice has its own clarity, darker toward its middle
-                let t = 0.25 + big.shade[i] * 0.55 - Math.min(big.nearest[i] / 60, 1) * 0.25 + (1 - depth) * 0.15;
-                t = Math.min(1, Math.max(0, t));
-                let r = deep[0] + (mid[0] - deep[0]) * t;
-                let g = deep[1] + (mid[1] - deep[1]) * t;
-                let b = deep[2] + (mid[2] - deep[2]) * t;
-
-                // Main cracks, then a net of hairline fractures
-                const main = Math.max(0, 1 - big.edge[i] / 1.6);
-                const hair = Math.max(0, 1 - fine.edge[i] / 0.9) * 0.28;
-                const glow = Math.max(0, 1 - big.edge[i] / 7) * 0.12;
-                const c = Math.min(1, (main + hair + glow) * crackRGBA[3]);
-                r += (crackRGBA[0] - r) * c;
-                g += (crackRGBA[1] - g) * c;
-                b += (crackRGBA[2] - b) * c;
-
-                const o = i * 4;
-                data[o] = r;
-                data[o + 1] = g;
-                data[o + 2] = b;
-                data[o + 3] = 255;
+    // Unique cell edges, each once, as slightly wandering crack lines
+    function crackEdges(cells, wander) {
+        const seen = new Set();
+        const key = (p) => `${Math.round(p[0])},${Math.round(p[1])}`;
+        const edges = [];
+        for (const { poly } of cells) {
+            for (let i = 0; i < poly.length; i++) {
+                const a = poly[i];
+                const b = poly[(i + 1) % poly.length];
+                const ka = key(a);
+                const kb = key(b);
+                const id = ka < kb ? `${ka}|${kb}` : `${kb}|${ka}`;
+                if (ka === kb || seen.has(id)) continue;
+                seen.add(id);
+                // Midpoint displacement, two levels, so cracks are never ruler-straight
+                let points = [a, b];
+                for (let level = 0; level < 3; level++) {
+                    const next = [points[0]];
+                    for (let k = 1; k < points.length; k++) {
+                        const p = points[k - 1];
+                        const q = points[k];
+                        const len = Math.hypot(q[0] - p[0], q[1] - p[1]);
+                        const off = rand(-1, 1) * len * wander;
+                        const nx = -(q[1] - p[1]) / (len || 1);
+                        const ny = (q[0] - p[0]) / (len || 1);
+                        next.push([(p[0] + q[0]) / 2 + nx * off, (p[1] + q[1]) / 2 + ny * off], q);
+                    }
+                    points = next;
+                }
+                edges.push(points);
             }
         }
+        return edges;
+    }
 
-        const tile = document.createElement('canvas');
-        tile.width = w;
-        tile.height = h;
-        tile.getContext('2d').putImageData(image, 0, 0);
+    function strokeEdges(edges, passes) {
+        const path = new Path2D();
+        for (const points of edges) {
+            path.moveTo(points[0][0], points[0][1]);
+            for (let k = 1; k < points.length; k++) path.lineTo(points[k][0], points[k][1]);
+        }
+        for (const [lineWidth, alpha] of passes) {
+            scene.globalAlpha = alpha * colors.crackRGBA[3];
+            scene.lineWidth = lineWidth;
+            scene.stroke(path);
+        }
+        scene.globalAlpha = 1;
+    }
 
+    const mix = (a, b, t) => `rgb(${Math.round(a[0] + (b[0] - a[0]) * t)}, ${Math.round(a[1] + (b[1] - a[1]) * t)}, ${Math.round(a[2] + (b[2] - a[2]) * t)})`;
+
+    // Drawn as vectors at full device resolution, so the ice stays sharp
+    // wherever the frost is wiped away.
+    function renderScene() {
+        const { deep, mid, crackRGBA } = colors;
+        const area = width * height;
         scene.setTransform(dpr, 0, 0, dpr, 0, 0);
-        scene.imageSmoothingEnabled = true;
-        scene.imageSmoothingQuality = 'high';
-        scene.drawImage(tile, 0, 0, width, height);
+        scene.fillStyle = mix(deep, mid, 0.2);
+        scene.fillRect(0, 0, width, height);
+
+        // Slabs of ice, each with its own clarity, darker toward its middle
+        const slabs = voronoiCells(Array.from({ length: Math.max(24, Math.round(area / 19800)) }, () => ({
+            x: Math.random() * width, y: Math.random() * height, shade: Math.random()
+        })));
+        for (const { site, poly } of slabs) {
+            if (poly.length < 3) continue;
+            let reach = 0;
+            for (const [px, py] of poly) reach = Math.max(reach, Math.hypot(px - site.x, py - site.y));
+            const t = Math.min(1, Math.max(0, 0.3 + site.shade * 0.55 + (1 - site.y / height) * 0.15));
+            const gradient = scene.createRadialGradient(site.x, site.y, 0, site.x, site.y, reach);
+            gradient.addColorStop(0, mix(deep, mid, Math.max(0, t - 0.28)));
+            gradient.addColorStop(0.7, mix(deep, mid, t - 0.05));
+            gradient.addColorStop(1, mix(deep, mid, t));
+            scene.fillStyle = gradient;
+            scene.beginPath();
+            scene.moveTo(poly[0][0], poly[0][1]);
+            for (let k = 1; k < poly.length; k++) scene.lineTo(poly[k][0], poly[k][1]);
+            scene.closePath();
+            scene.fill();
+            // Seal the antialiased seam against the neighbouring slab
+            scene.strokeStyle = gradient;
+            scene.lineWidth = 1.5;
+            scene.stroke();
+        }
+
+        // Fine grain inside the ice
+        const grain = document.createElement('canvas');
+        grain.width = grain.height = 128;
+        const g = grain.getContext('2d');
+        const noise = g.createImageData(128, 128);
+        for (let i = 0; i < noise.data.length; i += 4) {
+            const v = Math.random() < 0.5 ? 255 : 0;
+            noise.data[i] = noise.data[i + 1] = noise.data[i + 2] = v;
+            noise.data[i + 3] = Math.random() * 14;
+        }
+        g.putImageData(noise, 0, 0);
+        scene.save();
+        scene.setTransform(1, 0, 0, 1, 0, 0);
+        scene.fillStyle = scene.createPattern(grain, 'repeat');
+        scene.fillRect(0, 0, sceneCanvas.width, sceneCanvas.height);
+        scene.restore();
+
+        scene.strokeStyle = colors.crack;
+        scene.lineCap = 'round';
+        scene.lineJoin = 'round';
+
+        // A net of hairline fractures from a second, finer field
+        const hairlines = crackEdges(voronoiCells(Array.from({ length: Math.max(60, Math.round(area / 3420)) }, () => ({
+            x: Math.random() * width, y: Math.random() * height
+        }))), 0.05);
+        strokeEdges(hairlines, [[0.6, 0.3]]);
+
+        // The main cracks between slabs: wide soft glow, then a bright core
+        strokeEdges(crackEdges(slabs, 0.035), [[14, 0.05], [6, 0.12], [2.4, 0.4], [1.1, 1]]);
 
         // Air bubbles trapped in the ice
         scene.strokeStyle = colors.crack;
-        for (let i = 0; i < Math.round((width * height) / 26000); i++) {
+        scene.lineWidth = 0.8;
+        for (let i = 0; i < Math.round(area / 26000); i++) {
             const r = rand(0.8, 3.6);
-            scene.globalAlpha = rand(0.25, 0.6);
-            scene.lineWidth = 0.8;
+            const x = rand(0, width);
+            const y = rand(0, height);
+            scene.globalAlpha = rand(0.25, 0.6) * crackRGBA[3];
             scene.beginPath();
-            scene.arc(rand(0, width), rand(0, height), r, 0, Math.PI * 2);
+            scene.arc(x, y, r, 0, Math.PI * 2);
+            scene.stroke();
+            scene.globalAlpha *= 0.6;
+            scene.beginPath();
+            scene.arc(x - r * 0.3, y - r * 0.3, r * 0.3, 0, Math.PI * 2);
             scene.stroke();
         }
         scene.globalAlpha = 1;
