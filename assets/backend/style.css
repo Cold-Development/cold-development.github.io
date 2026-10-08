@@ -1,4 +1,13 @@
-/* Fonts: Geist for display/body, the original cold font for small mono labels */
+/* Fonts, both self-hosted.
+   Climate Crisis: display face whose YEAR axis is built from Arctic sea-ice
+   data (1979 = solid, 2050 = melted). Geist: body and interface text. */
+@font-face {
+    font-family: 'Climate Crisis';
+    src: url('../font/climate-crisis.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
 @font-face {
     font-family: 'Geist';
     src: url('../font/geist.woff2') format('woff2');
@@ -6,51 +15,70 @@
     font-style: normal;
     font-display: swap;
 }
-@font-face {
-    font-family: 'CustomFont';
-    src: url('../font/coldfont.woff2') format('woff2');
-    font-weight: normal;
-    font-style: normal;
-    font-display: swap;
-}
 
-/* Design tokens: cool slate neutrals, one glacier-blue accent.
-   color-scheme declares native light + dark support, which is what
-   Noir and similar extensions check before forcing their own dark mode. */
+/* Tokens. Light is a glacier at noon, dark is polar night.
+   The --scene-* and --frost-* values are read by ice.js for the canvases. */
 :root {
     color-scheme: light dark;
-    --canvas: #eef2f6;
-    --surface: rgba(255, 255, 255, 0.55);
-    --ink: #0d1726;
-    --body: #3d4a5c;
-    --mute: #6b778a;
-    --hairline: rgba(13, 23, 38, 0.1);
-    --accent: #2f63d6;
-    --frost-a: rgba(120, 180, 255, 0.45);
-    --frost-b: rgba(180, 225, 255, 0.55);
-    --heart: #d9466b;
-    --frost-line: rgba(64, 112, 180, 0.3);
-    --frost-fog: rgba(255, 255, 255, 0.9);
-    --radius: 10px;
-    --ease: cubic-bezier(0.22, 1, 0.36, 1);
-    --sans: 'Geist', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
-    --mono: 'CustomFont', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+    --ink: #062438;
+    --body: #24485f;
+    --mute: #4d6e82;
+    --accent: #0a6f9c;
+    --heart: #c43d63;
+
+    --glass: rgba(236, 248, 255, 0.5);
+    --glass-solid: #e4f3fb;
+    --glass-edge: rgba(255, 255, 255, 0.85);
+    --glass-under: rgba(20, 88, 128, 0.16);
+    --glass-sheen: rgba(255, 255, 255, 0.55);
+    --row-hover: rgba(10, 111, 156, 0.09);
+    --edge-glow: rgba(255, 255, 255, 1);
+    --glare: rgba(255, 255, 255, 0.42);
+    --glint: rgba(255, 255, 255, 0.75);
+    --flash-frost: rgba(255, 255, 255, 0.95);
+    --etch: rgba(10, 70, 104, 0.14);
+    --shadow: 0 2px 6px rgba(12, 70, 104, 0.1), 0 34px 70px -28px rgba(12, 70, 104, 0.45);
+
+    --scene-deep: #4f9fcb;
+    --scene-mid: #a6d8f0;
+    --scene-crack: rgba(255, 255, 255, 0.95);
+    --frost-tint: rgba(246, 252, 255, 0.5);
+    --frost-crystal: rgba(255, 255, 255, 0.95);
+
+    --radius-slab: 22px;
+    --radius-row: 12px;
+    --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    --display: 'Climate Crisis', 'Geist', system-ui, sans-serif;
+    --sans: 'Geist', system-ui, -apple-system, 'Segoe UI', sans-serif;
 }
 
 @media (prefers-color-scheme: dark) {
     :root {
-        --canvas: #0b0f16;
-        --surface: rgba(255, 255, 255, 0.03);
-        --ink: #eaf0f7;
-        --body: #a9b4c3;
-        --mute: #6f7b8c;
-        --hairline: rgba(234, 240, 247, 0.1);
-        --accent: #7fb2ff;
-        --frost-a: rgba(60, 110, 220, 0.3);
-        --frost-b: rgba(90, 180, 255, 0.16);
-        --heart: #f06a8b;
-        --frost-line: rgba(200, 228, 255, 0.28);
-        --frost-fog: rgba(150, 195, 255, 0.14);
+        --ink: #e9f8ff;
+        --body: #b3d6e8;
+        --mute: #7fa3b7;
+        --accent: #86dcff;
+        --heart: #ff7d9e;
+
+        --glass: rgba(6, 28, 44, 0.46);
+        --glass-solid: #0a2233;
+        --glass-edge: rgba(186, 236, 255, 0.24);
+        --glass-under: rgba(0, 6, 12, 0.5);
+        --glass-sheen: rgba(186, 236, 255, 0.09);
+        --row-hover: rgba(134, 220, 255, 0.08);
+        --edge-glow: rgba(170, 235, 255, 0.9);
+        --glare: rgba(150, 220, 255, 0.1);
+        --glint: rgba(170, 235, 255, 0.16);
+        --flash-frost: rgba(200, 240, 255, 0.42);
+        --etch: rgba(186, 236, 255, 0.12);
+        --shadow: 0 2px 8px rgba(0, 6, 14, 0.4), 0 40px 80px -30px rgba(0, 6, 14, 0.9);
+
+        --scene-deep: #020a12;
+        --scene-mid: #0e3b59;
+        --scene-crack: rgba(130, 218, 255, 0.62);
+        --frost-tint: rgba(150, 205, 235, 0.13);
+        --frost-crystal: rgba(210, 242, 255, 0.6);
     }
 }
 
@@ -61,8 +89,9 @@
 }
 
 html {
-    background-color: var(--canvas);
+    background-color: var(--scene-deep);
     -webkit-text-size-adjust: 100%;
+    scrollbar-color: var(--mute) transparent;
 }
 
 body {
@@ -80,280 +109,454 @@ body {
 
 ::selection {
     background: var(--accent);
-    color: var(--canvas);
+    color: var(--glass-solid);
 }
 
 a {
     color: inherit;
     text-decoration: none;
 }
-a:focus-visible {
+
+:focus-visible {
     outline: 2px solid var(--accent);
-    outline-offset: 4px;
-    border-radius: 4px;
+    outline-offset: 3px;
+    border-radius: 6px;
 }
 
 .skip-link {
     position: absolute;
     left: 1rem;
     top: -3rem;
-    padding: 0.5rem 0.9rem;
-    border-radius: 6px;
-    background: var(--ink);
-    color: var(--canvas);
     z-index: 30;
-    transition: top 0.2s var(--ease);
+    padding: 0.55rem 0.95rem;
+    border-radius: 10px;
+    background: var(--ink);
+    color: var(--glass-solid);
+    font-weight: 500;
+    transition: top 0.2s var(--ease-out);
 }
 .skip-link:focus-visible {
     top: 1rem;
 }
 
-/* Two soft frost blooms drifting behind the content */
-.frost {
+/* The two canvases fill the window behind everything */
+.ice-scene,
+.ice-frost {
     position: fixed;
     inset: 0;
-    z-index: -1;
-    pointer-events: none;
-    overflow: hidden;
-}
-.frost::before,
-.frost::after {
-    content: '';
-    position: absolute;
-    border-radius: 50%;
-    will-change: transform;
-}
-.frost::before {
-    width: 46rem;
-    height: 46rem;
-    top: -18rem;
-    right: -12rem;
-    background: radial-gradient(circle, var(--frost-a), transparent 65%);
-    animation: drift 22s ease-in-out infinite alternate;
-}
-.frost::after {
-    width: 34rem;
-    height: 34rem;
-    bottom: -16rem;
-    left: -10rem;
-    background: radial-gradient(circle, var(--frost-b), transparent 65%);
-    animation: drift 28s ease-in-out infinite alternate-reverse;
-}
-
-/* Window frost: crystals are drawn by frost.js, the haze builds and fades with them */
-.frost-fog,
-.frost-canvas {
-    position: fixed;
-    inset: 0;
-    z-index: -1;
-    pointer-events: none;
-}
-.frost-fog {
-    opacity: 0;
-    background:
-        radial-gradient(ellipse 75% 70% at 50% 50%, transparent 55%, var(--frost-fog) 100%);
-}
-.frost-canvas {
     width: 100%;
     height: 100%;
+    z-index: -2;
+    pointer-events: none;
+}
+.ice-frost {
+    z-index: -1;
+}
+
+/* Shock ring where a click cracks the ice (ice.js adds and removes it) */
+.impact {
+    position: fixed;
+    z-index: 0;
+    width: 20px;
+    height: 20px;
+    margin: -10px 0 0 -10px;
+    overflow: visible;
+    pointer-events: none;
+    fill: none;
+    stroke: var(--edge-glow);
+    stroke-width: 1.5;
+    animation: impact 0.7s var(--ease-out) forwards;
+}
+.impact circle {
+    vector-effect: non-scaling-stroke;
 }
 
 /* Page frame */
 .page {
-    width: min(100%, 72rem);
+    width: min(100%, 76rem);
     min-height: 100dvh;
     margin: 0 auto;
     display: grid;
     grid-template-rows: auto 1fr auto;
     gap: 2.5rem;
     padding: max(1.5rem, env(safe-area-inset-top)) max(1.5rem, env(safe-area-inset-right))
-             max(1.75rem, env(safe-area-inset-bottom)) max(1.5rem, env(safe-area-inset-left));
+             max(1.5rem, env(safe-area-inset-bottom)) max(1.5rem, env(safe-area-inset-left));
 }
 
-/* Top bar */
 .topbar {
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 1rem;
-    font-family: var(--mono);
-    font-size: 13px;
-    color: var(--mute);
-    text-shadow: 0 0 6px var(--canvas), 0 0 12px var(--canvas);
+    font-size: 14px;
+    font-weight: 500;
 }
 
 .brand {
     display: inline-flex;
     align-items: center;
-    gap: 0.6rem;
-    color: var(--ink);
+    gap: 0.65rem;
+    letter-spacing: -0.01em;
 }
 .brand img {
     display: block;
 }
-@media (prefers-color-scheme: light) {
-    /* The logo is drawn white on transparent */
-    .brand img,
-    .badge--icon img {
-        filter: invert(1) brightness(0.2);
-    }
-}
 
 .clock {
     margin: 0;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-.clock__dot {
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    background: #2fbf71;
-    box-shadow: 0 0 0 3px rgba(47, 191, 113, 0.18);
+    color: var(--body);
 }
 .clock__time {
+    margin-left: 0.35rem;
     color: var(--ink);
     font-variant-numeric: tabular-nums;
 }
 
-/* Hero: headline left, links right */
+/* Hero: the frozen headline on the window, the link slab as a pane of ice */
 .hero {
     display: grid;
-    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
-    align-items: end;
-    align-content: center;
-    gap: 3rem 4rem;
-    padding-bottom: 1rem;
-}
-
-.eyebrow {
-    margin: 0 0 1.25rem;
-    font-family: var(--mono);
-    font-size: 13px;
-    color: var(--accent);
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+    align-items: center;
+    gap: 3rem 5rem;
 }
 
 .headline {
     margin: 0;
-    font-size: clamp(3.25rem, 1.4rem + 7vw, 7.25rem);
-    font-weight: 600;
-    line-height: 0.92;
-    letter-spacing: -0.055em;
+    font-family: var(--display);
+    font-weight: 400;
+    font-size: clamp(3.4rem, 1.6rem + 5.6vw, 6rem);
+    line-height: 0.98;
+    letter-spacing: -0.035em;
     text-wrap: balance;
+    font-variation-settings: 'YEAR' 1979;
+    animation: freeze 2.4s var(--ease-out) both;
 }
 .nowrap {
     white-space: nowrap;
 }
+/* Sleepy z's rising out of "free…ing": small to large, low to high,
+   bobbing one after another like the 💤 emoji come to life */
 .zz {
-    display: inline-block;
-    font-size: 0.34em;
+    display: inline-flex;
+    align-items: flex-start;
+    gap: 0.03em;
+    height: 0.9em;
+    margin: 0 0.05em 0 0.04em;
     vertical-align: top;
-    margin: 0.1em 0.04em 0 0.02em;
-    letter-spacing: 0;
-}
-.headline__dot {
     color: var(--accent);
+    letter-spacing: 0;
+    line-height: 1;
+}
+.zz span {
+    display: inline-block;
+    animation: snore 2.8s ease-in-out infinite;
+}
+.zz span:nth-child(1) {
+    font-size: 0.24em;
+    margin-top: 1.9em;
+}
+.zz span:nth-child(2) {
+    font-size: 0.32em;
+    margin-top: 0.75em;
+    animation-delay: 0.35s;
+}
+.zz span:nth-child(3) {
+    font-size: 0.42em;
+    margin-top: 0;
+    animation-delay: 0.7s;
 }
 
 .lede {
-    max-width: 34ch;
-    margin: 1.75rem 0 0;
-    font-size: 1.125rem;
-    line-height: 1.55;
+    max-width: 36ch;
+    margin: 2rem 0 0;
+    font-size: 1.15rem;
+    line-height: 1.6;
     color: var(--body);
     text-wrap: pretty;
 }
 
-/* Link list */
-.links__label {
-    margin: 0 0 0.25rem;
-    font-family: var(--mono);
-    font-size: 12px;
-    font-weight: normal;
-    letter-spacing: 0.06em;
+/* Glass slab: blur of the frost behind it, a lit top edge, a shaded bottom
+   edge and a soft diagonal sheen, like a cut block of clear ice. */
+.slab {
+    position: relative;
+    padding: 1.6rem 1.25rem 1.25rem;
+    border-radius: var(--radius-slab);
+    background: var(--glass);
+    border: 1px solid var(--glass-edge);
+    box-shadow:
+        inset 0 1px 0 var(--glass-edge),
+        inset 0 -1px 0 var(--glass-under),
+        var(--shadow);
+    -webkit-backdrop-filter: blur(22px) saturate(160%);
+    backdrop-filter: blur(22px) saturate(160%);
+    isolation: isolate;
+    --mx: 30%;
+    --my: 0%;
+    will-change: transform;
+}
+.slab::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    background:
+        radial-gradient(28rem circle at var(--mx) var(--my), var(--glare), transparent 55%),
+        linear-gradient(125deg, var(--glass-sheen) 0%, transparent 38%, transparent 70%, var(--glass-sheen) 100%);
+    pointer-events: none;
+}
+/* The edge catches the light nearest the cursor */
+.slab::after {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    padding: 1px;
+    background: radial-gradient(16rem circle at var(--mx) var(--my), var(--edge-glow), transparent 70%);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+    pointer-events: none;
+}
+
+.slab__label {
+    margin: 0 0 0.35rem 0.75rem;
+    font-size: 13px;
+    font-weight: 500;
     color: var(--mute);
 }
-.links__label:not(:first-child) {
-    margin-top: 2rem;
+.slab__label:not(:first-child) {
+    margin-top: 1.4rem;
 }
-.links ul {
+
+.slab__list {
     list-style: none;
     margin: 0;
     padding: 0;
-    border-top: 1px solid var(--hairline);
+}
+.slab__list li + li {
+    border-top: 1px solid var(--etch);
 }
 
-.link {
-    display: grid;
-    grid-template-columns: 1fr auto 1.25rem;
-    align-items: baseline;
-    gap: 1rem;
-    padding: 0.85rem 0.25rem;
-    border-bottom: 1px solid var(--hairline);
-    transition: padding 0.35s var(--ease), color 0.2s var(--ease);
-}
-.link__name {
-    font-size: 1.25rem;
-    font-weight: 500;
-    letter-spacing: -0.02em;
-}
-.link__meta {
-    font-family: var(--mono);
-    font-size: 12px;
-    color: var(--mute);
-    white-space: nowrap;
-}
-.link__arrow {
-    justify-self: end;
-    color: var(--mute);
-    transition: transform 0.35s var(--ease), color 0.2s var(--ease);
-}
-.link:hover {
-    padding-left: 0.75rem;
-    color: var(--accent);
-}
-.link:hover .link__arrow {
-    color: var(--accent);
-    transform: translate(3px, -3px);
-}
-.link:active .link__name {
-    opacity: 0.7;
-}
-
-/* Copy button row (Discord): same look as a link row */
-.link--copy {
+.row {
+    position: relative;
     width: 100%;
-    margin: 0;
+    display: grid;
+    grid-template-columns: 1fr auto 1.1rem;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.85rem 0.75rem;
     border: 0;
-    border-bottom: 1px solid var(--hairline);
-    background: none;
+    border-radius: var(--radius-row);
+    background: transparent;
     font: inherit;
     color: inherit;
     text-align: left;
     cursor: pointer;
+    overflow: hidden;
+    isolation: isolate;
+    transition: background-color 0.25s var(--ease-out), color 0.2s var(--ease-out);
 }
-.link--copy:focus-visible {
-    outline: 2px solid var(--accent);
-    outline-offset: 4px;
-    border-radius: 4px;
+.row > * {
+    position: relative;
+    z-index: 1;
+}
+/* A glint of light runs through the row on hover, like light through ice */
+.row::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background: linear-gradient(105deg, transparent 30%, var(--glint) 50%, transparent 70%);
+    transform: translateX(-120%);
+    pointer-events: none;
+}
+.row:hover::after {
+    transform: translateX(120%);
+    transition: transform 0.8s var(--ease-out);
+}
+.row__name {
+    font-size: 1.2rem;
+    font-weight: 550;
+    letter-spacing: -0.02em;
+}
+.row__meta {
+    font-size: 14px;
+    color: var(--mute);
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+}
+.row__icon {
+    width: 1.1rem;
+    height: 1.1rem;
+    fill: currentColor;
+    color: var(--mute);
+    transition: transform 0.35s var(--ease-out), color 0.2s var(--ease-out), opacity 0.2s var(--ease-out);
+}
+.row:hover {
+    background-color: var(--row-hover);
+    color: var(--accent);
+}
+.row:hover .row__icon {
+    color: var(--accent);
+}
+a.row:hover .row__icon {
+    transform: translate(2px, -2px);
+}
+.row:active {
+    transform: translateY(1px);
+}
+
+/* Copy row: the copy glyph swaps to a check, the username to "copied!" */
+.row--copy .copy-icon {
+    grid-column: 3;
+    grid-row: 1;
+}
+.copy-icon--done {
+    opacity: 0;
+    transform: scale(0.6);
+}
+.row--copy.copied {
+    color: var(--accent);
+}
+.row--copy.copied .row__meta,
+.row--copy.copied .row__icon {
+    color: var(--accent);
+}
+.row--copy.copied .copy-icon--copy {
+    opacity: 0;
+    transform: scale(0.6);
+}
+.row--copy.copied .copy-icon--done {
+    opacity: 1;
+    transform: scale(1);
 }
 .copy-label {
     display: inline-block;
 }
-.copy-label.flip {
-    animation: flip-in 0.35s var(--ease);
+/* Copying flash-freezes the row: frost bursts out from the icon, then melts */
+.row--copy::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    border-radius: inherit;
+    background:
+        radial-gradient(circle at 95% 50%, var(--flash-frost), transparent 75%),
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.2' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.6 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    opacity: 0;
+    transform-origin: 95% 50%;
+    pointer-events: none;
 }
-.link--copy.copied,
-.link--copy.copied .link__meta,
-.link--copy.copied .link__arrow {
+.row--copy.copied::before {
+    animation: flash-freeze 1.4s var(--ease-out) both;
+}
+.copy-label.flip {
+    animation: flip-in 0.35s var(--ease-out);
+}
+
+/* Footer */
+.footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem 2rem;
+}
+
+.badges {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.6rem;
+}
+.badge {
+    display: inline-flex;
+    line-height: 0;
+    border-radius: 4px;
+    transition: transform 0.25s var(--ease-out);
+}
+.badge img {
+    display: block;
+    border-radius: 3px;
+}
+.badge:hover {
+    transform: translateY(-2px);
+}
+
+.credit {
+    margin: 0;
+    font-size: 14px;
+    color: var(--body);
+}
+.credit__heart {
+    color: var(--heart);
+}
+.credit__hash,
+.credit__hash a {
+    color: var(--ink);
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
+}
+.credit__hash a:hover {
     color: var(--accent);
 }
-.link--copy.copied .link__arrow {
-    transform: scale(1.25);
+
+/* The logos are white line art: darken them on the bright glacier */
+@media (prefers-color-scheme: light) {
+    .brand img,
+    .badge--logo img {
+        filter: invert(1) brightness(0.25) sepia(1) hue-rotate(160deg) saturate(3);
+    }
 }
-.link--copy.copied {
-    animation: copied-flash 0.6s var(--ease);
+
+@keyframes freeze {
+    from {
+        font-variation-settings: 'YEAR' 2050;
+        opacity: 0.2;
+    }
+    to {
+        font-variation-settings: 'YEAR' 1979;
+        opacity: 1;
+    }
+}
+
+@keyframes snore {
+    0%,
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+    50% {
+        transform: translateY(-0.35em);
+        opacity: 0.55;
+    }
+}
+
+@keyframes impact {
+    from {
+        transform: scale(0.4);
+        opacity: 1;
+    }
+    to {
+        transform: scale(11);
+        opacity: 0;
+    }
+}
+
+@keyframes flash-freeze {
+    0% {
+        opacity: 0;
+        transform: scale(0.2);
+    }
+    14% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(1);
+    }
 }
 
 @keyframes flip-in {
@@ -367,108 +570,11 @@ a:focus-visible {
     }
 }
 
-@keyframes copied-flash {
-    from {
-        background-color: color-mix(in srgb, var(--accent) 14%, transparent);
-    }
-    to {
-        background-color: transparent;
-    }
-}
-
-/* Footer */
-.footer {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem 2rem;
-    padding-top: 1.25rem;
-    border-top: 1px solid var(--hairline);
-}
-
-.badges {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.6rem;
-}
-.badge {
-    display: inline-flex;
-    line-height: 0;
-    transition: transform 0.25s var(--ease);
-}
-.badge img {
-    display: block;
-    border-radius: 3px;
-}
-.badge--icon img {
-    border-radius: 0;
-    opacity: 0.8;
-}
-.badge:hover {
-    transform: translateY(-2px);
-}
-.badge:active {
-    transform: scale(0.96);
-}
-
-.credit {
-    margin: 0;
-    font-family: var(--mono);
-    font-size: 13px;
-    color: var(--mute);
-    text-shadow: 0 0 6px var(--canvas), 0 0 12px var(--canvas);
-}
-.credit__heart {
-    color: var(--heart);
-}
-.credit__hash,
-.credit__hash a {
-    color: var(--body);
-}
-.credit__hash a:hover {
-    color: var(--accent);
-}
-
-/* Staggered entry */
-.topbar,
-.eyebrow,
-.headline,
-.lede,
-.links,
-.footer {
-    animation: rise 0.9s var(--ease) both;
-}
-.eyebrow { animation-delay: 0.05s; }
-.headline { animation-delay: 0.1s; }
-.lede { animation-delay: 0.2s; }
-.links { animation-delay: 0.3s; }
-.footer { animation-delay: 0.4s; }
-
-@keyframes rise {
-    from {
-        opacity: 0;
-        transform: translateY(16px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-@keyframes drift {
-    to {
-        transform: translate(-6rem, 4rem) scale(1.1);
-    }
-}
-
 /* Tablet and below: stack */
-@media (max-width: 860px) {
+@media (max-width: 900px) {
     .hero {
         grid-template-columns: 1fr;
-        align-items: start;
-        gap: 3rem;
+        gap: 2.5rem;
     }
 }
 
@@ -477,13 +583,31 @@ a:focus-visible {
         gap: 2rem;
     }
     .lede {
-        font-size: 1rem;
+        font-size: 1.05rem;
+        margin-top: 1.5rem;
     }
-    .link__name {
-        font-size: 1.125rem;
+    .slab {
+        padding: 1.25rem 0.6rem 0.75rem;
+    }
+    .row__name {
+        font-size: 1.1rem;
     }
     .footer {
         justify-content: flex-start;
+    }
+}
+
+/* No blur support, or the visitor asked for less transparency: solid ice */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    .slab {
+        background: var(--glass-solid);
+    }
+}
+@media (prefers-reduced-transparency: reduce) {
+    .slab {
+        background: var(--glass-solid);
+        -webkit-backdrop-filter: none;
+        backdrop-filter: none;
     }
 }
 
