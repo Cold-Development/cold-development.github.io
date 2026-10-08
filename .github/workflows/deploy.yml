@@ -38,5 +38,5 @@ jobs:
         github_token: ${{ secrets.WEBSITE_AUTH }}
         publish_branch: gh-pages
         publish_dir: .
-        exclude_assets: .github
+        exclude_assets: .github,CLAUDE.md
         enable_jekyll: false

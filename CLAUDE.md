@@ -16,7 +16,7 @@ Serve over HTTP rather than opening the file directly: fonts load via relative `
 
 ## Deploy pipeline (read before touching `index.html` markup or asset links)
 
-- The live site is served from the **`gh-pages`** branch, not `master`. `.github/workflows/deploy.yml` runs on every push to `master` (or by hand via `workflow_dispatch`) and publishes the repo root to `gh-pages` with `peaceiris/actions-gh-pages`, authenticated by the `WEBSITE_AUTH` secret. `.github/` is excluded from the published files.
+- The live site is served from the **`gh-pages`** branch, not `master`. `.github/workflows/deploy.yml` runs on every push to `master` (or by hand via `workflow_dispatch`) and publishes the repo root to `gh-pages` with `peaceiris/actions-gh-pages`, authenticated by the `WEBSITE_AUTH` secret. `.github/` and `CLAUDE.md` are excluded from the published files (add any other repo-only file to `exclude_assets`).
 - Before publishing, the workflow rewrites `index.html` with `sed`:
   - The literal text `@loading...` (inside `<span id="commit-hash">`) is replaced with a link to the deployed commit. Keep that exact string, three ASCII dots included, and keep it inside a `<span>`, not an `<a>`, or the output gets nested anchors.
   - Every `?v=<anything>` on an asset URL is replaced with the short commit hash, which is how caches get busted. Any new CSS/JS reference needs a `?v=` suffix to get this; the local values (`?v=3.3` and so on) don't matter.
