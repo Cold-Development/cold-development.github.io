@@ -38,5 +38,10 @@ One accent only. Shadows are tinted with the scene hue and always have a y-offse
 - Radii: slab 22px, rows 12px (inner tighter than outer).
 - Rows are separated by etched 1px lines (`--etch`), not cards.
 - Icons: Phosphor (regular) arrow-up-right, copy, check, inlined as SVG with `fill: currentColor`.
-- Motion: the one authored moment is the load (frost forming + headline freezing, ~2.5s, ease-out). Everything else answers the visitor: the wipe, row hover, the copy confirmation. All of it turns off under `prefers-reduced-motion` (static frost, solid headline).
+- Motion: the one authored moment is the load (frost forming + headline freezing, ~2.5s, ease-out). Everything else answers the visitor:
+  - **Wipe:** the cursor or a tap clears the frost, which refreezes.
+  - **Melt:** headline letters near the cursor melt (`YEAR` toward 2050) and refreeze slowly when it leaves (`fx.js`).
+  - **Crack:** a click on the background cracks the lake ice from that point (jagged rays plus a broken fracture ring), knocks the frost off around it, and sends a shock ring over the glass (`.impact`).
+  - **Slab:** tilts up to ~7° toward the cursor; a glare and a lit edge follow it (`--mx`/`--my`). Fine pointers only.
+  - **Rows:** a glint of light runs through a row on hover. Copying flash-freezes the Discord row with frost bursting from the icon, then it melts. All of it turns off under `prefers-reduced-motion` (static frost, solid headline).
 - `prefers-reduced-transparency` or no `backdrop-filter` support: the slab becomes solid `--glass-solid`.

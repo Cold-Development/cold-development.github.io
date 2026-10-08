@@ -33,6 +33,10 @@
     --glass-under: rgba(20, 88, 128, 0.16);
     --glass-sheen: rgba(255, 255, 255, 0.55);
     --row-hover: rgba(10, 111, 156, 0.09);
+    --edge-glow: rgba(255, 255, 255, 1);
+    --glare: rgba(255, 255, 255, 0.42);
+    --glint: rgba(255, 255, 255, 0.75);
+    --flash-frost: rgba(255, 255, 255, 0.95);
     --etch: rgba(10, 70, 104, 0.14);
     --shadow: 0 2px 6px rgba(12, 70, 104, 0.1), 0 34px 70px -28px rgba(12, 70, 104, 0.45);
 
@@ -63,6 +67,10 @@
         --glass-under: rgba(0, 6, 12, 0.5);
         --glass-sheen: rgba(186, 236, 255, 0.09);
         --row-hover: rgba(134, 220, 255, 0.08);
+        --edge-glow: rgba(170, 235, 255, 0.9);
+        --glare: rgba(150, 220, 255, 0.1);
+        --glint: rgba(170, 235, 255, 0.16);
+        --flash-frost: rgba(200, 240, 255, 0.42);
         --etch: rgba(186, 236, 255, 0.12);
         --shadow: 0 2px 8px rgba(0, 6, 14, 0.4), 0 40px 80px -30px rgba(0, 6, 14, 0.9);
 
@@ -143,6 +151,24 @@ a {
 }
 .ice-frost {
     z-index: -1;
+}
+
+/* Shock ring where a click cracks the ice (ice.js adds and removes it) */
+.impact {
+    position: fixed;
+    z-index: 0;
+    width: 20px;
+    height: 20px;
+    margin: -10px 0 0 -10px;
+    overflow: visible;
+    pointer-events: none;
+    fill: none;
+    stroke: var(--edge-glow);
+    stroke-width: 1.5;
+    animation: impact 0.7s var(--ease-out) forwards;
+}
+.impact circle {
+    vector-effect: non-scaling-stroke;
 }
 
 /* Page frame */
@@ -264,6 +290,9 @@ a {
     -webkit-backdrop-filter: blur(22px) saturate(160%);
     backdrop-filter: blur(22px) saturate(160%);
     isolation: isolate;
+    --mx: 30%;
+    --my: 0%;
+    will-change: transform;
 }
 .slab::before {
     content: '';
@@ -271,7 +300,22 @@ a {
     inset: 0;
     z-index: -1;
     border-radius: inherit;
-    background: linear-gradient(125deg, var(--glass-sheen) 0%, transparent 38%, transparent 70%, var(--glass-sheen) 100%);
+    background:
+        radial-gradient(28rem circle at var(--mx) var(--my), var(--glare), transparent 55%),
+        linear-gradient(125deg, var(--glass-sheen) 0%, transparent 38%, transparent 70%, var(--glass-sheen) 100%);
+    pointer-events: none;
+}
+/* The edge catches the light nearest the cursor */
+.slab::after {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    padding: 1px;
+    background: radial-gradient(16rem circle at var(--mx) var(--my), var(--edge-glow), transparent 70%);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
     pointer-events: none;
 }
 
@@ -309,7 +353,27 @@ a {
     color: inherit;
     text-align: left;
     cursor: pointer;
+    overflow: hidden;
+    isolation: isolate;
     transition: background-color 0.25s var(--ease-out), color 0.2s var(--ease-out);
+}
+.row > * {
+    position: relative;
+    z-index: 1;
+}
+/* A glint of light runs through the row on hover, like light through ice */
+.row::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background: linear-gradient(105deg, transparent 30%, var(--glint) 50%, transparent 70%);
+    transform: translateX(-120%);
+    pointer-events: none;
+}
+.row:hover::after {
+    transform: translateX(120%);
+    transition: transform 0.8s var(--ease-out);
 }
 .row__name {
     font-size: 1.2rem;
@@ -369,6 +433,23 @@ a.row:hover .row__icon {
 }
 .copy-label {
     display: inline-block;
+}
+/* Copying flash-freezes the row: frost bursts out from the icon, then melts */
+.row--copy::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    border-radius: inherit;
+    background:
+        radial-gradient(circle at 95% 50%, var(--flash-frost), transparent 75%),
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.2' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.6 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    opacity: 0;
+    transform-origin: 95% 50%;
+    pointer-events: none;
+}
+.row--copy.copied::before {
+    animation: flash-freeze 1.4s var(--ease-out) both;
 }
 .copy-label.flip {
     animation: flip-in 0.35s var(--ease-out);
@@ -449,6 +530,32 @@ a.row:hover .row__icon {
     50% {
         transform: translateY(-0.35em);
         opacity: 0.55;
+    }
+}
+
+@keyframes impact {
+    from {
+        transform: scale(0.4);
+        opacity: 1;
+    }
+    to {
+        transform: scale(11);
+        opacity: 0;
+    }
+}
+
+@keyframes flash-freeze {
+    0% {
+        opacity: 0;
+        transform: scale(0.2);
+    }
+    14% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(1);
     }
 }
 

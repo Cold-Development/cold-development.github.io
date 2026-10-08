@@ -323,8 +323,8 @@
         frost.globalCompositeOperation = 'source-over';
     }
 
-    function dab(x, y) {
-        const r = Math.max(60, Math.min(width, height) * 0.09) / CLEAR_SCALE;
+    function dab(x, y, scale = 1) {
+        const r = (Math.max(60, Math.min(width, height) * 0.09) * scale) / CLEAR_SCALE;
         const cx = x / CLEAR_SCALE;
         const cy = y / CLEAR_SCALE;
         const gradient = clearCtx.createRadialGradient(cx, cy, 0, cx, cy, r);
@@ -397,6 +397,95 @@
         requestAnimationFrame(frame);
     }
 
+    // ---- Click: the ice cracks --------------------------------------------
+
+    // A jagged crack from (x, y), with the odd side branch
+    function crackPath(x, y, angle, length, depth, out) {
+        const points = [[x, y]];
+        let travelled = 0;
+        while (travelled < length) {
+            const step = rand(7, 16);
+            angle += rand(-0.35, 0.35);
+            x += Math.cos(angle) * step;
+            y += Math.sin(angle) * step;
+            travelled += step;
+            points.push([x, y]);
+            if (depth < 1 && Math.random() < 0.12) {
+                crackPath(x, y, angle + rand(0.5, 1) * (Math.random() < 0.5 ? 1 : -1), (length - travelled) * rand(0.3, 0.6), depth + 1, out);
+            }
+        }
+        if (points.length > 1) out.push({ points, depth });
+        return out;
+    }
+
+    function crackAt(x, y) {
+        const paths = [];
+        const rays = 5 + Math.floor(Math.random() * 4);
+        const reach = Math.min(width, height);
+        for (let i = 0; i < rays; i++) {
+            crackPath(x, y, (i / rays) * Math.PI * 2 + rand(-0.3, 0.3), reach * rand(0.1, 0.24), 0, paths);
+        }
+        // A broken ring of fractures around the impact
+        const ringRadius = rand(18, 30);
+        for (let a = rand(0, 1); a < Math.PI * 2; a += rand(0.6, 1.1)) {
+            const sweep = rand(0.3, 0.7);
+            const points = [];
+            for (let t = 0; t <= 1; t += 0.25) {
+                const r = ringRadius + rand(-3, 3);
+                points.push([x + Math.cos(a + sweep * t) * r, y + Math.sin(a + sweep * t) * r]);
+            }
+            paths.push({ points, depth: 1 });
+        }
+
+        // Knock the frost off the glass around the impact so the crack shows
+        lastPoint = null;
+        dab(x, y, 2.2);
+        dab(x, y, 1.2);
+        lastWipe = performance.now();
+        start();
+
+        // Grow the cracks outward over a quarter second, drawn into the scene
+        const duration = 260;
+        const begin = performance.now();
+        const drawn = paths.map(() => 1);
+        const grow = (now) => {
+            const t = Math.min(1, (now - begin) / duration);
+            const eased = 1 - Math.pow(1 - t, 3);
+            scene.strokeStyle = colors.crack;
+            scene.lineCap = 'round';
+            scene.lineJoin = 'round';
+            paths.forEach((path, i) => {
+                const target = Math.min(path.points.length - 1, Math.max(1, Math.round(eased * (path.points.length - 1))));
+                if (target <= drawn[i] - 1 && t < 1) return;
+                const from = drawn[i] - 1;
+                const segment = new Path2D();
+                segment.moveTo(path.points[from][0], path.points[from][1]);
+                for (let k = from + 1; k <= target; k++) segment.lineTo(path.points[k][0], path.points[k][1]);
+                scene.globalAlpha = path.depth ? 0.18 : 0.28;
+                scene.lineWidth = path.depth ? 2.5 : 4;
+                scene.stroke(segment);
+                scene.globalAlpha = path.depth ? 0.7 : 0.95;
+                scene.lineWidth = path.depth ? 0.8 : 1.3;
+                scene.stroke(segment);
+                drawn[i] = target + 1;
+            });
+            scene.globalAlpha = 1;
+            if (t < 1) requestAnimationFrame(grow);
+        };
+        requestAnimationFrame(grow);
+
+        // Shock ring on the glass
+        const ring = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        ring.setAttribute('class', 'impact');
+        ring.setAttribute('viewBox', '0 0 20 20');
+        ring.setAttribute('aria-hidden', 'true');
+        ring.innerHTML = '<circle cx="10" cy="10" r="9" />';
+        ring.style.left = `${x}px`;
+        ring.style.top = `${y}px`;
+        ring.addEventListener('animationend', () => ring.remove());
+        document.body.appendChild(ring);
+    }
+
     // ---- Setup --------------------------------------------------------------
 
     function build(withIntro) {
@@ -422,6 +511,10 @@
         lastPoint = null;
         wipe(event.clientX, event.clientY);
     }, { passive: true });
+    window.addEventListener('click', (event) => {
+        if (reducedMotion.matches || event.target.closest('a, button, .slab, .topbar, .footer')) return;
+        crackAt(event.clientX, event.clientY);
+    });
     document.addEventListener('pointerleave', () => { lastPoint = null; });
     window.addEventListener('blur', () => { lastPoint = null; });
 
