@@ -29,7 +29,7 @@ One accent only. Shadows are tinted with the scene hue and always have a y-offse
 
 ## Type
 
-- **Display:** Climate Crisis (self-hosted, `assets/font/climate-crisis.woff2`). Its `YEAR` axis comes from Arctic sea-ice data: 1979 is solid, 2050 is melted. The headline animates `YEAR` 2050 → 1979 once on load (`@keyframes freeze`). Max size 6rem, tracking -0.035em, lowercase.
+- **Display:** Climate Crisis (self-hosted, `assets/font/climate-crisis.woff2`). Its `YEAR` axis comes from Arctic sea-ice data: 1979 is solid, 2050 is melted. The headline animates `YEAR` 2050 → 1979 once on load (`@keyframes freeze`). Max size 6rem, tracking -0.035em, lowercase. The "zzz" inside "free…ing" is three text z's in the accent colour, rising in size and height and bobbing in turn (`@keyframes snore`).
 - **Body / UI:** Geist variable (`assets/font/geist.woff2`). Row names 550 weight, meta 14px with tabular numerals.
 - No monospace, no all-caps labels, no eyebrow above the headline.
 

@@ -208,13 +208,36 @@ a {
 .nowrap {
     white-space: nowrap;
 }
+/* Sleepy z's rising out of "free…ing": small to large, low to high,
+   bobbing one after another like the 💤 emoji come to life */
 .zz {
-    display: inline-block;
-    font-family: var(--sans);
-    font-size: 0.32em;
+    display: inline-flex;
+    align-items: flex-start;
+    gap: 0.03em;
+    height: 0.9em;
+    margin: 0 0.05em 0 0.04em;
     vertical-align: top;
-    margin: 0.2em 0.03em 0 0.02em;
+    color: var(--accent);
     letter-spacing: 0;
+    line-height: 1;
+}
+.zz span {
+    display: inline-block;
+    animation: snore 2.8s ease-in-out infinite;
+}
+.zz span:nth-child(1) {
+    font-size: 0.24em;
+    margin-top: 1.9em;
+}
+.zz span:nth-child(2) {
+    font-size: 0.32em;
+    margin-top: 0.75em;
+    animation-delay: 0.35s;
+}
+.zz span:nth-child(3) {
+    font-size: 0.42em;
+    margin-top: 0;
+    animation-delay: 0.7s;
 }
 
 .lede {
@@ -414,6 +437,18 @@ a.row:hover .row__icon {
     to {
         font-variation-settings: 'YEAR' 1979;
         opacity: 1;
+    }
+}
+
+@keyframes snore {
+    0%,
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+    50% {
+        transform: translateY(-0.35em);
+        opacity: 0.55;
     }
 }
 
